@@ -53,6 +53,7 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Game.cs" />
     <Compile Include="Piece.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -84,6 +85,36 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\pawn_white.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\king_white.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\king_black.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\queen_white.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\queen_black.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\rook_white.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\rook_black.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bishop_black.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bishop_white.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\knight_black.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\knight_white.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

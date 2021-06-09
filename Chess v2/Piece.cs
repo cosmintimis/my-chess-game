@@ -13,6 +13,7 @@ namespace Chess_v2
         private readonly PieceColor _color;
         private readonly PieceType _type;
 
+
         public Piece(PieceType type, PieceColor color)
         {
             _type = type;
@@ -42,14 +43,7 @@ namespace Chess_v2
             return Equals((Piece)obj);
         }
 
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                return ((int)_color * 397) ^ (int)_type;
-            }
-        }
-
+      
         public static bool operator ==(Piece left, Piece right)
         {
             return Equals(left, right);
@@ -64,9 +58,12 @@ namespace Chess_v2
        
         public enum PieceType
         {
-            Pawn,
             King,
-            Queen
+            Queen,
+            Rook,
+            Bishop,
+            Knight,
+            Pawn
 
         }
 
