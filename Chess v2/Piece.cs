@@ -12,14 +12,13 @@ namespace Chess_v2
        
         private readonly PieceColor _color;
         private readonly PieceType _type;
-        private readonly Bitmap _image;
+      
 
 
-        public Piece(PieceType type, PieceColor color,  Bitmap image)
+        public Piece(PieceType type, PieceColor color)
         {
             _type = type;
             _color = color;
-            _image = image;
         }
 
         public PieceType Type
@@ -31,9 +30,6 @@ namespace Chess_v2
         {
             get { return _color; }
         }
-
-
-        
 
         protected bool Equals(Piece other)
         {

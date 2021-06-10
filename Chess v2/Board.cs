@@ -9,10 +9,8 @@ namespace Chess_v2
 {
     public class Board
     {
-        private readonly Piece[] _pieces;
-
+        public readonly Piece[] _pieces;
         private Piece CurrentPiece;
-
 
         public Bitmap CreateBoard(Size tileSize)
         {
@@ -35,7 +33,7 @@ namespace Chess_v2
         public  Board()
         {
             _pieces = new Piece[8 * 8];
-            
+            InitPieces();
             PopulatePieces();
         }
 
@@ -51,34 +49,65 @@ namespace Chess_v2
             _pieces[i] = piece;
         }
 
+        private void InitPieces()
+        {
+            /// Init Black Pieces
+            
+            _pieces[0] = new Piece(Piece.PieceType.Rook, Piece.PieceColor.Black);
+            _pieces[1] = new Piece(Piece.PieceType.Knight, Piece.PieceColor.Black);
+            _pieces[2] = new Piece(Piece.PieceType.Bishop, Piece.PieceColor.Black);
+            _pieces[3] = new Piece(Piece.PieceType.Queen, Piece.PieceColor.Black);
+            _pieces[4] = new Piece(Piece.PieceType.King, Piece.PieceColor.Black);
+            _pieces[5] = new Piece(Piece.PieceType.Bishop, Piece.PieceColor.Black);
+            _pieces[6] = new Piece(Piece.PieceType.Knight, Piece.PieceColor.Black);
+            _pieces[7] = new Piece(Piece.PieceType.Rook, Piece.PieceColor.Black);
+
+            for (int i = 8; i <= 15; i++)
+                _pieces[i] = new Piece(Piece.PieceType.Pawn, Piece.PieceColor.Black);
+
+            /// Init White Pieces
+
+            _pieces[56] = new Piece(Piece.PieceType.Rook, Piece.PieceColor.White);
+            _pieces[57] = new Piece(Piece.PieceType.Knight, Piece.PieceColor.White);
+            _pieces[58] = new Piece(Piece.PieceType.Bishop, Piece.PieceColor.White);
+            _pieces[59] = new Piece(Piece.PieceType.Queen, Piece.PieceColor.White);
+            _pieces[60] = new Piece(Piece.PieceType.King, Piece.PieceColor.White);
+            _pieces[61] = new Piece(Piece.PieceType.Bishop, Piece.PieceColor.White);
+            _pieces[62] = new Piece(Piece.PieceType.Knight, Piece.PieceColor.White);
+            _pieces[63] = new Piece(Piece.PieceType.Rook, Piece.PieceColor.White);
+
+            for (int i = 48; i <= 55; i++)
+                _pieces[i] = new Piece(Piece.PieceType.Pawn, Piece.PieceColor.White);
+        }
+
         private void PopulatePieces()
         {
 
 
-            SetPiece(0, 0, new Piece(Piece.PieceType.Rook, Piece.PieceColor.Black, new Bitmap(Properties.Resources.king_black));
-            SetPiece(1, 0, new Piece(Piece.PieceType.Knight, Piece.PieceColor.Black));
-            SetPiece(2, 0, new Piece(Piece.PieceType.Bishop, Piece.PieceColor.Black));
-            SetPiece(3, 0, new Piece(Piece.PieceType.Queen, Piece.PieceColor.Black));
-            SetPiece(4, 0, new Piece(Piece.PieceType.King, Piece.PieceColor.Black));
-            SetPiece(5, 0, new Piece(Piece.PieceType.Bishop, Piece.PieceColor.Black));
-            SetPiece(6, 0, new Piece(Piece.PieceType.Knight, Piece.PieceColor.Black));
-            SetPiece(7, 0, new Piece(Piece.PieceType.Rook, Piece.PieceColor.Black));
+            SetPiece(0, 0, _pieces[0]);
+            SetPiece(1, 0, _pieces[1]);
+            SetPiece(2, 0, _pieces[2]);
+            SetPiece(3, 0, _pieces[3]);
+            SetPiece(4, 0, _pieces[4]);
+            SetPiece(5, 0, _pieces[5]);
+            SetPiece(6, 0, _pieces[6]);
+            SetPiece(7, 0, _pieces[7]);
 
-            SetPiece(0, 7, new Piece(Piece.PieceType.Rook, Piece.PieceColor.White));
-            SetPiece(1, 7, new Piece(Piece.PieceType.Knight, Piece.PieceColor.White));
-            SetPiece(2, 7, new Piece(Piece.PieceType.Bishop, Piece.PieceColor.White));
-            SetPiece(3, 7, new Piece(Piece.PieceType.Queen, Piece.PieceColor.White));
-            SetPiece(4, 7, new Piece(Piece.PieceType.King, Piece.PieceColor.White));
-            SetPiece(5, 7, new Piece(Piece.PieceType.Bishop, Piece.PieceColor.White));
-            SetPiece(6, 7, new Piece(Piece.PieceType.Knight, Piece.PieceColor.White));
-            SetPiece(7, 7, new Piece(Piece.PieceType.Rook, Piece.PieceColor.White));
+            SetPiece(0, 7, _pieces[56]);
+            SetPiece(1, 7, _pieces[57]);
+            SetPiece(2, 7, _pieces[58]);
+            SetPiece(3, 7, _pieces[59]);
+            SetPiece(4, 7, _pieces[60]);
+            SetPiece(5, 7, _pieces[61]);
+            SetPiece(6, 7, _pieces[62]);
+            SetPiece(7, 7, _pieces[63]);
 
-
+            int j = 7, jj = 47;
             for (int i = 0; i < 8; i++)
             {
 
-                SetPiece(i, 1, new Piece(Piece.PieceType.Pawn, Piece.PieceColor.Black));
-                SetPiece(i, 6, new Piece(Piece.PieceType.Pawn, Piece.PieceColor.White));
+                SetPiece(i, 1, _pieces[++j]);
+                SetPiece(i, 6, _pieces[++jj]);
             }
 
         }

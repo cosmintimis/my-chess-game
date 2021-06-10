@@ -51,36 +51,38 @@ namespace Chess_v2
 
             board = new Board();
 
-           /* PieceBitmaps = new Dictionary<Piece, Bitmap>();
-            PieceBitmaps.Add(new Piece(Piece.PieceType.Rook, Piece.PieceColor.Black), new Bitmap(Properties.Resources.rook_black));
-            PieceBitmaps.Add(new Piece(Piece.PieceType.Knight, Piece.PieceColor.Black), new Bitmap(Properties.Resources.knight_black));
-            PieceBitmaps.Add(new Piece(Piece.PieceType.Bishop, Piece.PieceColor.Black), new Bitmap(Properties.Resources.bishop_black));
-            PieceBitmaps.Add(new Piece(Piece.PieceType.Queen, Piece.PieceColor.Black), new Bitmap(Properties.Resources.queen_black));
-            PieceBitmaps.Add(new Piece(Piece.PieceType.King, Piece.PieceColor.Black), new Bitmap(Properties.Resources.king_black));
+            PieceBitmaps = new Dictionary<Piece, Bitmap>();
+
+            PieceBitmaps.Add(board._pieces[0], new Bitmap(Properties.Resources.rook_black));
+            PieceBitmaps.Add(board._pieces[1], new Bitmap(Properties.Resources.knight_black));
+            PieceBitmaps.Add(board._pieces[2], new Bitmap(Properties.Resources.bishop_black));
+            PieceBitmaps.Add(board._pieces[3], new Bitmap(Properties.Resources.queen_black));
+            PieceBitmaps.Add(board._pieces[4], new Bitmap(Properties.Resources.king_black));
+            PieceBitmaps.Add(board._pieces[5], new Bitmap(Properties.Resources.bishop_black));
+            PieceBitmaps.Add(board._pieces[6], new Bitmap(Properties.Resources.knight_black));
+            PieceBitmaps.Add(board._pieces[7], new Bitmap(Properties.Resources.rook_black));
+            for(int i = 8; i <= 15; i++)
+                PieceBitmaps.Add(board._pieces[i], new Bitmap(Properties.Resources.pawn_black));
 
 
-            PieceBitmaps.Add(new Piece(Piece.PieceType.Rook, Piece.PieceColor.White), new Bitmap(Properties.Resources.rook_white));
-            PieceBitmaps.Add(new Piece(Piece.PieceType.Knight, Piece.PieceColor.White), new Bitmap(Properties.Resources.knight_white));
-            PieceBitmaps.Add(new Piece(Piece.PieceType.Bishop, Piece.PieceColor.White), new Bitmap(Properties.Resources.bishop_white));
-            PieceBitmaps.Add(new Piece(Piece.PieceType.Queen, Piece.PieceColor.White), new Bitmap(Properties.Resources.queen_white));
-            PieceBitmaps.Add(new Piece(Piece.PieceType.King, Piece.PieceColor.White), new Bitmap(Properties.Resources.king_white));
-      
-          
-        
-
-           
-        
-            PieceBitmaps.Add(new Piece(Piece.PieceType.Pawn, Piece.PieceColor.Black), new Bitmap(Properties.Resources.pawn_black));
-            PieceBitmaps.Add(new Piece(Piece.PieceType.Pawn, Piece.PieceColor.White), new Bitmap(Properties.Resources.pawn_white));
-           */
-            
+            PieceBitmaps.Add(board._pieces[56], new Bitmap(Properties.Resources.rook_white));
+            PieceBitmaps.Add(board._pieces[57], new Bitmap(Properties.Resources.knight_white));
+            PieceBitmaps.Add(board._pieces[58], new Bitmap(Properties.Resources.bishop_white));
+            PieceBitmaps.Add(board._pieces[59], new Bitmap(Properties.Resources.queen_white));
+            PieceBitmaps.Add(board._pieces[60], new Bitmap(Properties.Resources.king_white));
+            PieceBitmaps.Add(board._pieces[61], new Bitmap(Properties.Resources.bishop_white));
+            PieceBitmaps.Add(board._pieces[62], new Bitmap(Properties.Resources.knight_white));
+            PieceBitmaps.Add(board._pieces[63], new Bitmap(Properties.Resources.rook_white));
+            for(int i = 48; i <= 55; i++)
+                PieceBitmaps.Add(board._pieces[i], new Bitmap(Properties.Resources.pawn_white));
 
         }
+     
         public Bitmap DrawGame()
         {
             var tileSize = new Size(TileWidth, TileHeight);
             Bitmap bitmap = board.CreateBoard(tileSize);
-          //  DrawPieces(bitmap);
+            DrawPieces(bitmap);
 
             return bitmap;
         
@@ -114,9 +116,9 @@ namespace Chess_v2
                         {
 
 
-                            bitmap1 = piece.image;
-                            bitmap2 = ResizeBitmap(bitmap1, TileWidth, TileHeight);
-                            graphics.DrawImage(bitmap2, new Point(x * TileWidth, y * TileHeight));
+                            bitmap1 = PieceBitmaps[piece];
+                             bitmap2 = ResizeBitmap(bitmap1, TileWidth, TileHeight);
+                             graphics.DrawImage(bitmap2, new Point(x * TileWidth, y * TileHeight));
                         
 
 
