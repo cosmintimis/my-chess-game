@@ -35,6 +35,7 @@ namespace Chess_v2
         public  Board()
         {
             _pieces = new Piece[8 * 8];
+            
             PopulatePieces();
         }
 
@@ -52,8 +53,26 @@ namespace Chess_v2
 
         private void PopulatePieces()
         {
-            
-            
+
+
+            SetPiece(0, 0, new Piece(Piece.PieceType.Rook, Piece.PieceColor.Black, new Bitmap(Properties.Resources.king_black));
+            SetPiece(1, 0, new Piece(Piece.PieceType.Knight, Piece.PieceColor.Black));
+            SetPiece(2, 0, new Piece(Piece.PieceType.Bishop, Piece.PieceColor.Black));
+            SetPiece(3, 0, new Piece(Piece.PieceType.Queen, Piece.PieceColor.Black));
+            SetPiece(4, 0, new Piece(Piece.PieceType.King, Piece.PieceColor.Black));
+            SetPiece(5, 0, new Piece(Piece.PieceType.Bishop, Piece.PieceColor.Black));
+            SetPiece(6, 0, new Piece(Piece.PieceType.Knight, Piece.PieceColor.Black));
+            SetPiece(7, 0, new Piece(Piece.PieceType.Rook, Piece.PieceColor.Black));
+
+            SetPiece(0, 7, new Piece(Piece.PieceType.Rook, Piece.PieceColor.White));
+            SetPiece(1, 7, new Piece(Piece.PieceType.Knight, Piece.PieceColor.White));
+            SetPiece(2, 7, new Piece(Piece.PieceType.Bishop, Piece.PieceColor.White));
+            SetPiece(3, 7, new Piece(Piece.PieceType.Queen, Piece.PieceColor.White));
+            SetPiece(4, 7, new Piece(Piece.PieceType.King, Piece.PieceColor.White));
+            SetPiece(5, 7, new Piece(Piece.PieceType.Bishop, Piece.PieceColor.White));
+            SetPiece(6, 7, new Piece(Piece.PieceType.Knight, Piece.PieceColor.White));
+            SetPiece(7, 7, new Piece(Piece.PieceType.Rook, Piece.PieceColor.White));
+
 
             for (int i = 0; i < 8; i++)
             {

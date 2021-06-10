@@ -37,8 +37,6 @@ namespace Chess_v2
             game.board.PickOrDropPiece(e);
      
         }
-
-    
     }
     
 }
