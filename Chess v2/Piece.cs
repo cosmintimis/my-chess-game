@@ -9,12 +9,10 @@ namespace Chess_v2
 {
     public class Piece
     {
-       
-        private readonly PieceColor _color;
-        private readonly PieceType _type;
-      
 
-
+        public PieceColor _color;
+        public PieceType _type;
+        
         public Piece(PieceType type, PieceColor color)
         {
             _type = type;
@@ -31,32 +29,14 @@ namespace Chess_v2
             get { return _color; }
         }
 
-        protected bool Equals(Piece other)
+        public bool SameColor(Piece piece)
         {
-            return _color == other._color && _type == other._type;
-        }
+            if (_color == piece._color)
+                return true;
+            return false;
 
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != GetType()) return false;
-            return Equals((Piece)obj);
-        }
 
-      
-        public static bool operator ==(Piece left, Piece right)
-        {
-            return Equals(left, right);
         }
-
-        public static bool operator !=(Piece left, Piece right)
-        {
-            return !Equals(left, right);
-        }
-
-       
-       
         public enum PieceType
         {
             King,
@@ -74,9 +54,9 @@ namespace Chess_v2
             White
         }
 
-      
+
     }
 
 
-    
+
 }

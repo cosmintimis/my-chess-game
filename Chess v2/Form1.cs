@@ -12,16 +12,14 @@ namespace Chess_v2
 {
     public partial class Form1 : Form
     {
-       
-        public Game game = new Game(); 
+
+        public Game game = new Game();
         public Form1()
         {
             InitializeComponent();
             pictureBox1.MouseDown += pictureBox1_MouseDown;
 
         }
-
-       
         private void Form1_Load(object sender, EventArgs e)
         {
             ClientSize = new Size(game.TileWidth * 8, game.TileHeight * 8);
@@ -35,8 +33,8 @@ namespace Chess_v2
         private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
         {
             game.board.PickOrDropPiece(e);
-     
+            pictureBox1.Image = game.DrawGame();
         }
     }
-    
+
 }

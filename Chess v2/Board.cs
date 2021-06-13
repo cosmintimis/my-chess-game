@@ -9,9 +9,17 @@ namespace Chess_v2
 {
     public class Board
     {
-        public readonly Piece[] _pieces;
-        private Piece CurrentPiece;
 
+        private Piece CurrentPiece, piece1, piece2;
+        public readonly Piece[] _pieces;
+        int x, y, oldX, oldY;
+
+        enum Player
+        {
+            white,
+            black
+        }
+        private Player currentTurn;
         public Bitmap CreateBoard(Size tileSize)
         {
             int tileWidth = tileSize.Width;
@@ -30,9 +38,9 @@ namespace Chess_v2
             }
             return bitmap;
         }
-        public  Board()
+        public Board()
         {
-            _pieces = new Piece[8 * 8];
+            _pieces = new Piece[64];
             InitPieces();
             PopulatePieces();
         }
@@ -52,7 +60,7 @@ namespace Chess_v2
         private void InitPieces()
         {
             /// Init Black Pieces
-            
+
             _pieces[0] = new Piece(Piece.PieceType.Rook, Piece.PieceColor.Black);
             _pieces[1] = new Piece(Piece.PieceType.Knight, Piece.PieceColor.Black);
             _pieces[2] = new Piece(Piece.PieceType.Bishop, Piece.PieceColor.Black);
@@ -78,6 +86,10 @@ namespace Chess_v2
 
             for (int i = 48; i <= 55; i++)
                 _pieces[i] = new Piece(Piece.PieceType.Pawn, Piece.PieceColor.White);
+
+
+
+
         }
 
         private void PopulatePieces()
@@ -113,36 +125,254 @@ namespace Chess_v2
         }
 
 
-
-        public void PickOrDropPiece(MouseEventArgs e)
+        public bool DiagonalMove(int x, int y, int newX, int newY)
         {
-            Point location = e.Location;
-            int x = location.X / 100;
-            int y = location.Y / 100;
-            bool pickOrDrop = CurrentPiece == null;
-            if (pickOrDrop)
+            Piece aux;
+            bool ok;
+            if (Math.Abs(x - newX) == Math.Abs(y - newY))
             {
-                // Pick a piece
-                Piece piece = GetPiece(x, y);
-                SetPiece(x, y, null);
-                if (piece != null)
+                ok = false;
+                if (newX > x)
                 {
-                  //  test.label1.Text = string.Format("You picked a {0} {1} at location {2},{3}", piece.Color, piece.Type, x,
-                    //   y);
+                    if (y < newY)
+                    {
+                        while (x < newX - 1 && y < newY - 1)
+                        {
+                            aux = GetPiece(x + 1, y + 1);
+                            if (aux != null)
+                                ok = true;
+                            x++;
+                            y++;
+                        }
+                        if (ok == false)
+                            return true;
+
+                    }
+                    if (y > newY)
+                    {
+                        while (x < newX - 1 && y - 1 > newY)
+                        {
+                            aux = GetPiece(x + 1, y - 1);
+                            if (aux != null)
+                                ok = true;
+                            x++;
+                            y--;
+                        }
+                        if (ok == false)
+                            return true;
+
+                    }
+                }
+                else if (x > newX)
+                {
+                    if (y < newY)
+                    {
+                        while (x - 1 > newX && y < newY - 1)
+                        {
+                            aux = GetPiece(x - 1, y + 1);
+                            if (aux != null)
+                                ok = true;
+                            x--;
+                            y++;
+                        }
+                        if (ok == false)
+                            return true;
+
+                    }
+                    if (y > newY)
+                    {
+                        while (x - 1 > newX && y - 1 > newY)
+                        {
+                            aux = GetPiece(x - 1, y - 1);
+                            if (aux != null)
+                                ok = true;
+                            x--;
+                            y--;
+                        }
+                        if (ok == false)
+                            return true;
+
+                    }
+                }
+
+            }
+            return false;
+
+        }
+
+        public bool HorizontalMove(int x, int y, int newX, int newY)
+        {
+            bool ok = false;
+            Piece aux;
+            if (y == newY)
+            {
+                if (x < newX)
+                {
+                    for (int i = x + 1; i < newX; i++)
+                    {
+                        aux = GetPiece(i, y);
+                        if (aux != null)
+                            ok = true;
+                    }
+                    if (ok == false)
+                        return true;
                 }
                 else
                 {
-                   // test.label1.Text = "Nothing there !";
+                    for (int i = x - 1; i > newX; i--)
+                    {
+                        aux = GetPiece(i, y);
+                        if (aux != null)
+                            ok = true;
+                    }
+                    if (ok == false)
+                        return true;
+
                 }
-                CurrentPiece = piece;
+            }
+            return false;
+        }
+
+        public bool VerticalMove(int x, int y, int newX, int newY)
+        {
+            bool ok = false;
+            Piece aux;
+            if (x == newX)
+            {
+                if (newY < y)
+                {
+                    for (int i = y - 1; i > newY; i--)
+                    {
+                        aux = GetPiece(x, i);
+                        if (aux != null)
+                            ok = true;
+                    }
+                    if (ok == false)
+                        return true;
+                }
+                else
+                {
+                    for (int i = newY - 1; i > y; i--)
+                    {
+                        aux = GetPiece(x, i);
+                        if (aux != null)
+                            ok = true;
+                    }
+                    if (ok == false)
+                        return true;
+                }
+            }
+            return false;
+
+        }
+        public bool ValidMove(int x, int y, int newX, int newY, Piece piece1, Piece piece2)
+        {
+            switch (piece1._type)
+            {
+                case Piece.PieceType.Knight:
+                    if (Math.Abs(x - newX) * Math.Abs(y - newY) == 2)
+                        return true;
+                    return false;
+                case Piece.PieceType.Pawn:
+
+                    if (piece1._color == Piece.PieceColor.White)
+                    {
+                        if (piece2 == null && x == newX && ((y - newY == 1) || (y == 1 || y == 6) && ((y - newY == 1) || y - newY == 2)))
+                            return true;
+                        if (y - 1 == newY && (newX + 1 == x || newX - 1 == x) && piece2 != null)
+                            return true;
+
+                    }
+
+                    if (piece1._color == Piece.PieceColor.Black)
+                    {
+                        if (piece2 == null && x == newX && ((y - newY == -1) || (y == 1 || y == 6) && ((y - newY == -1) || y - newY == -2)))
+                            return true;
+                        if (y + 1 == newY && (newX + 1 == x || newX - 1 == x) && piece2 != null)
+                            return true;
+
+                    }
+                    return false;
+
+                case Piece.PieceType.Bishop:
+                    if (DiagonalMove(x, y, newX, newY))
+                        return true;
+                    return false;
+
+                case Piece.PieceType.Rook:
+                    if (HorizontalMove(x, y, newX, newY) || VerticalMove(x, y, newX, newY))
+                        return true;
+                    return false;
+                case Piece.PieceType.King:
+                    if ((newX + 1 == x || newX - 1 == x || newX == x) && (newY + 1 == y || newY - 1 == y || newY == y))
+                        return true;
+                    return false;
+
+                case Piece.PieceType.Queen:
+                    if (DiagonalMove(x, y, newX, newY) || HorizontalMove(x, y, newX, newY) || VerticalMove(x, y, newX, newY))
+                        return true;
+                    return false;
+
+                default:
+                    return false;
+
+            }
+        }
+
+        public void ChangeTurn()
+        {
+            if (currentTurn == Player.white)
+                currentTurn = Player.black;
+            else currentTurn = Player.white;
+
+
+        }
+        public void PickOrDropPiece(MouseEventArgs e)
+        {
+            Point location = e.Location;
+            x = location.X / 100;
+            y = location.Y / 100;
+
+            bool pickOrDrop = CurrentPiece == null;
+
+            if (pickOrDrop)
+            {
+                // Pick a piece
+                piece1 = GetPiece(x, y);
+                oldX = x;
+                oldY = y;
+
+                if (piece1 != null && ((piece1._color == Piece.PieceColor.White && currentTurn == Player.white) || (piece1._color == Piece.PieceColor.Black && currentTurn == Player.black)))
+                    CurrentPiece = piece1;
+                else CurrentPiece = null;
             }
             else
             {
                 // Drop picked piece
-                SetPiece(x, y, CurrentPiece);
-             //  test.label1.Text = string.Format("You dropped a {0} {1} at location {2},{3}", CurrentPiece.Color,
-              //     CurrentPiece.Type, x,
-             //      y);
+                piece2 = GetPiece(x, y);
+
+                if (ValidMove(oldX, oldY, x, y, piece1, piece2))
+                {
+                    if (piece2 != null && piece2.SameColor(piece1) == false)
+                    {
+                        SetPiece(oldX, oldY, null);
+                        SetPiece(x, y, CurrentPiece);
+                        ChangeTurn();
+
+                    }
+                    if (piece2 == null)
+                    {
+                        SetPiece(oldX, oldY, null);
+                        SetPiece(x, y, CurrentPiece);
+                        ChangeTurn();
+                    }
+
+                }
+                else
+                {
+                    SetPiece(oldX, oldY, CurrentPiece);
+                    MessageBox.Show("Mutare invalidă!");
+                }
                 CurrentPiece = null;
             }
         }
