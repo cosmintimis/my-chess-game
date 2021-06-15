@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.Linq;
-using System.Text;
-
-namespace Chess_v2
+﻿namespace Chess_v2
 {
     public class Piece
     {
@@ -31,7 +24,7 @@ namespace Chess_v2
 
         public bool SameColor(Piece piece)
         {
-            if (_color == piece._color)
+            if (piece != null && _color == piece._color)
                 return true;
             return false;
 

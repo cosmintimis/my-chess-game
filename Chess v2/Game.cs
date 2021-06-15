@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
 
 namespace Chess_v2
 {
@@ -14,32 +10,12 @@ namespace Chess_v2
         {
 
         }
-        public enum GameStatus
-        {
-            ACTIVE,
-            BLACK_WIN,
-            WHITE_WIN,
-            FORFEIT,
-            STALEMATE,
-            RESIGNATION
-        }
-      
-        // private GameStatus status;
-        // private List<Move> movesPlayed;
-
-
-
-        public Dictionary<Piece, Bitmap> PieceBitmaps;
+     
+        private Dictionary<Piece, Bitmap> PieceBitmaps;
         public Board board;
 
         public int TileWidth = 100;
         public int TileHeight = 100;
-
-        public void setStatus(GameStatus status)
-        {
-            //this.status = status;
-        }
-
         public void InitGame()
         {
 
@@ -74,7 +50,7 @@ namespace Chess_v2
 
         }
 
-        public void ChangePawns()
+        private void ChangePawns()
         {
 
             for (int i = 0; i <= 7; i++)
@@ -119,7 +95,7 @@ namespace Chess_v2
 
             return result;
         }
-        public void DrawPieces(Bitmap bitmap)
+        private void DrawPieces(Bitmap bitmap)
         {
             using (Graphics graphics = Graphics.FromImage(bitmap))
             {

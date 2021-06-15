@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace Chess_v2
@@ -12,9 +9,10 @@ namespace Chess_v2
 
         private Piece CurrentPiece, piece1, piece2;
         public readonly Piece[] _pieces;
-        int x, y, oldX, oldY;
+        private int x, y, oldX, oldY, b_kingX = 4, b_kingY = 0, w_kingX = 4, w_kingY = 7;
+        public int winner = -1;
 
-        enum Player
+        private enum Player
         {
             white,
             black
@@ -123,9 +121,7 @@ namespace Chess_v2
             }
 
         }
-
-
-        public bool DiagonalMove(int x, int y, int newX, int newY)
+        private bool DiagonalMove(int x, int y, int newX, int newY)
         {
             Piece aux;
             bool ok;
@@ -200,7 +196,7 @@ namespace Chess_v2
 
         }
 
-        public bool HorizontalMove(int x, int y, int newX, int newY)
+        private bool HorizontalMove(int x, int y, int newX, int newY)
         {
             bool ok = false;
             Piece aux;
@@ -233,7 +229,7 @@ namespace Chess_v2
             return false;
         }
 
-        public bool VerticalMove(int x, int y, int newX, int newY)
+        private bool VerticalMove(int x, int y, int newX, int newY)
         {
             bool ok = false;
             Piece aux;
@@ -265,51 +261,51 @@ namespace Chess_v2
             return false;
 
         }
-        public bool ValidMove(int x, int y, int newX, int newY, Piece piece1, Piece piece2)
+        private bool ValidMove(int fromX, int fromY, int toX, int toY)
         {
-            switch (piece1._type)
+            switch (GetPiece(fromX, fromY)._type)
             {
                 case Piece.PieceType.Knight:
-                    if (Math.Abs(x - newX) * Math.Abs(y - newY) == 2)
+                    if (Math.Abs(fromX - toX) * Math.Abs(fromY - toY) == 2)
                         return true;
                     return false;
                 case Piece.PieceType.Pawn:
 
-                    if (piece1._color == Piece.PieceColor.White)
+                    if (GetPiece(fromX, fromY)._color == Piece.PieceColor.White)
                     {
-                        if (piece2 == null && x == newX && ((y - newY == 1) || (y == 1 || y == 6) && ((y - newY == 1) || y - newY == 2)))
+                        if (GetPiece(toX, toY) == null && fromX == toX && ((fromY - toY == 1) || (fromY == 1 || fromY == 6) && ((fromY - toY == 1) || (fromY - toY == 2 && GetPiece(fromX, fromY - 1) == null))))
                             return true;
-                        if (y - 1 == newY && (newX + 1 == x || newX - 1 == x) && piece2 != null)
+                        if (fromY - 1 == toY && (toX + 1 == fromX || toX - 1 == fromX) && GetPiece(toX, toY) != null)
                             return true;
 
                     }
 
-                    if (piece1._color == Piece.PieceColor.Black)
+                    if (GetPiece(fromX, fromY)._color == Piece.PieceColor.Black)
                     {
-                        if (piece2 == null && x == newX && ((y - newY == -1) || (y == 1 || y == 6) && ((y - newY == -1) || y - newY == -2)))
+                        if (GetPiece(toX, toY) == null && fromX == toX && ((fromY - toY == -1) || (fromY == 1 || fromY == 6) && ((fromY - toY == -1) || (fromY - toY == -2 && GetPiece(fromX, fromY + 1) == null))))
                             return true;
-                        if (y + 1 == newY && (newX + 1 == x || newX - 1 == x) && piece2 != null)
+                        if (fromY + 1 == toY && (toX + 1 == fromX || toX - 1 == fromX) && GetPiece(toX, toY) != null)
                             return true;
 
                     }
                     return false;
 
                 case Piece.PieceType.Bishop:
-                    if (DiagonalMove(x, y, newX, newY))
+                    if (DiagonalMove(fromX, fromY, toX, toY))
                         return true;
                     return false;
 
                 case Piece.PieceType.Rook:
-                    if (HorizontalMove(x, y, newX, newY) || VerticalMove(x, y, newX, newY))
+                    if (HorizontalMove(fromX, fromY, toX, toY) || VerticalMove(fromX, fromY, toX, toY))
                         return true;
                     return false;
                 case Piece.PieceType.King:
-                    if ((newX + 1 == x || newX - 1 == x || newX == x) && (newY + 1 == y || newY - 1 == y || newY == y))
+                    if ((toX + 1 == fromX || toX - 1 == fromX || toX == fromX) && (toY + 1 == fromY || toY - 1 == fromY || toY == fromY))
                         return true;
                     return false;
 
                 case Piece.PieceType.Queen:
-                    if (DiagonalMove(x, y, newX, newY) || HorizontalMove(x, y, newX, newY) || VerticalMove(x, y, newX, newY))
+                    if (DiagonalMove(fromX, fromY, toX, toY) || HorizontalMove(fromX, fromY, toX, toY) || VerticalMove(fromX, fromY, toX, toY))
                         return true;
                     return false;
 
@@ -319,7 +315,7 @@ namespace Chess_v2
             }
         }
 
-        public void ChangeTurn()
+        private void ChangeTurn()
         {
             if (currentTurn == Player.white)
                 currentTurn = Player.black;
@@ -327,6 +323,146 @@ namespace Chess_v2
 
 
         }
+
+        private void updateKingPosition(Piece piece, int x, int y)
+        {
+            if (piece != null)
+                if (piece._type == Piece.PieceType.King)
+                {
+                    if (piece._color == Piece.PieceColor.Black)
+                    {
+                        b_kingX = x;
+                        b_kingY = y;
+                    }
+                    else
+                    {
+                        w_kingX = x;
+                        w_kingY = y;
+                    }
+                }
+        }
+
+        private bool isInCheck()
+        {
+            if (currentTurn == Player.black)
+            {
+                for (int y = 0; y < 8; y++)
+                {
+                    for (int x = 0; x < 8; x++)
+                    {
+                        Piece piece = GetPiece(x, y);
+                        if (piece != null && piece._color != Piece.PieceColor.Black)
+                        {
+                            if (ValidMove(x, y, b_kingX, b_kingY))
+                                return true;
+                        }
+
+                    }
+                }
+                return false;
+            }
+            else
+            {
+                for (int y = 0; y < 8; y++)
+                {
+                    for (int x = 0; x < 8; x++)
+                    {
+                        Piece piece = GetPiece(x, y);
+                        if (piece != null && piece._color != Piece.PieceColor.White)
+                        {
+                            if (ValidMove(x, y, w_kingX, w_kingY))
+                                return true;
+                        }
+
+                    }
+                }
+                return false;
+            }
+
+        }
+
+        private bool CanEscapeFromCheck()
+        {
+
+            for (int y = 0; y < 8; y++)
+            {
+                for (int x = 0; x < 8; x++)
+                {
+                    Piece piece1 = GetPiece(x, y);
+
+                    if (piece1 != null && ((piece1._color == Piece.PieceColor.Black && currentTurn == Player.black) || (piece1._color == Piece.PieceColor.White && currentTurn == Player.white)))
+                    {
+                        for (int yy = 0; yy < 8; yy++)
+                        {
+                            for (int xx = 0; xx < 8; xx++)
+                            {
+                                Piece piece2 = GetPiece(xx, yy);
+                                if (ValidMove(x, y, xx, yy))
+                                {
+                                    SetPiece(x, y, null);
+                                    SetPiece(xx, yy, piece1);
+                                    updateKingPosition(piece1, xx, yy);
+                                    if (isInCheck() || (piece2 != null && (piece2.SameColor(piece1) == true || piece2._type == Piece.PieceType.King)))
+                                    {
+                                        SetPiece(x, y, piece1);
+                                        SetPiece(xx, yy, piece2);
+                                        updateKingPosition(piece1, x, y);
+                                    }
+                                    else
+                                    {
+                                        SetPiece(x, y, piece1);
+                                        SetPiece(xx, yy, piece2);
+                                        updateKingPosition(piece1, x, y);
+                                        return true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
+        private bool CheckMate()
+        {
+            if (isInCheck() && !CanEscapeFromCheck())
+                return true;
+            else return false;
+        }
+        private bool Stalemate()
+        {
+            if (!isInCheck() && !CanEscapeFromCheck())
+                return true;
+            else return false;
+        }
+
+        private void MakeMove(Piece p1, Piece p2, int fromX, int fromY, int toX, int toY)
+        {
+            SetPiece(fromX, fromY, null);
+            SetPiece(toX, toY, p1);
+            updateKingPosition(p1, toX, toY);
+            if (isInCheck() || (p2 != null && (p2.SameColor(p1) == true || p2._type == Piece.PieceType.King)))
+            {
+                SetPiece(fromX, fromY, p1);
+                SetPiece(toX, toY, p2);
+                // MessageBox.Show("Nu se poate!");
+            }
+            else
+            {
+                ChangeTurn();
+                if (CheckMate())
+                {
+                    if (currentTurn == Player.black)
+                        winner = 1;
+                    else winner = 2;
+                }
+                else if (Stalemate())
+                    winner = 0;
+
+            }
+        }
+
         public void PickOrDropPiece(MouseEventArgs e)
         {
             Point location = e.Location;
@@ -337,45 +473,28 @@ namespace Chess_v2
 
             if (pickOrDrop)
             {
-                // Pick a piece
+
                 piece1 = GetPiece(x, y);
                 oldX = x;
                 oldY = y;
-
                 if (piece1 != null && ((piece1._color == Piece.PieceColor.White && currentTurn == Player.white) || (piece1._color == Piece.PieceColor.Black && currentTurn == Player.black)))
                     CurrentPiece = piece1;
                 else CurrentPiece = null;
             }
             else
             {
-                // Drop picked piece
                 piece2 = GetPiece(x, y);
 
-                if (ValidMove(oldX, oldY, x, y, piece1, piece2))
+                if (ValidMove(oldX, oldY, x, y))
                 {
-                    if (piece2 != null && piece2.SameColor(piece1) == false)
-                    {
-                        SetPiece(oldX, oldY, null);
-                        SetPiece(x, y, CurrentPiece);
-                        ChangeTurn();
-
-                    }
-                    if (piece2 == null)
-                    {
-                        SetPiece(oldX, oldY, null);
-                        SetPiece(x, y, CurrentPiece);
-                        ChangeTurn();
-                    }
-
+                    MakeMove(piece1, piece2, oldX, oldY, x, y);
                 }
                 else
-                {
-                    SetPiece(oldX, oldY, CurrentPiece);
                     MessageBox.Show("Mutare invalidă!");
-                }
+
                 CurrentPiece = null;
             }
-        }
 
+        }
     }
 }

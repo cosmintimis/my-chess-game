@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
-using System.Drawing.Imaging;
 
 namespace Chess_v2
 {
@@ -17,7 +11,7 @@ namespace Chess_v2
         public Form1()
         {
             InitializeComponent();
-            pictureBox1.MouseDown += pictureBox1_MouseDown;
+            pictureBox1.MouseDown += PictureBox1_MouseDown;
 
         }
         private void Form1_Load(object sender, EventArgs e)
@@ -30,10 +24,29 @@ namespace Chess_v2
 
         }
 
-        private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
+        private void PictureBox1_MouseDown(object sender, MouseEventArgs e)
         {
             game.board.PickOrDropPiece(e);
             pictureBox1.Image = game.DrawGame();
+            if (game.board.winner == 1)
+            {
+                pictureBox1.Enabled = false;
+                MessageBox.Show("Alb a castigat!");
+               
+            }
+            else if(game.board.winner == 2)
+            {
+                pictureBox1.Enabled = false;
+                MessageBox.Show("Negru a castigat!");
+                
+            }
+            else if(game.board.winner == 0)
+            {
+                pictureBox1.Enabled = false;
+                MessageBox.Show("Egalitate!");
+            }
+
+                
         }
     }
 
