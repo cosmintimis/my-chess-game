@@ -28,23 +28,26 @@ namespace Chess_v2
         {
             game.board.PickOrDropPiece(e);
             pictureBox1.Image = game.DrawGame();
-            if (game.board.winner == 1)
+            if (game.board.CheckMate())
             {
-                pictureBox1.Enabled = false;
-                MessageBox.Show("Alb a castigat!");
-               
+                    if (game.board.currentTurn == Board.Player.black)
+                    {
+                            pictureBox1.Enabled = false;
+                            MessageBox.Show("Alb a castigat!");
+                    }
+                    else
+                {
+                            pictureBox1.Enabled = false;
+                            MessageBox.Show("Negru a castigat!");
+                }
             }
-            else if(game.board.winner == 2)
+            else if (game.board.Stalemate())
             {
-                pictureBox1.Enabled = false;
-                MessageBox.Show("Negru a castigat!");
-                
+                 pictureBox1.Enabled = false;
+                 MessageBox.Show("Egalitate!");
             }
-            else if(game.board.winner == 0)
-            {
-                pictureBox1.Enabled = false;
-                MessageBox.Show("Egalitate!");
-            }
+          
+           
 
                 
         }

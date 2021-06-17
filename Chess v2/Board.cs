@@ -10,14 +10,15 @@ namespace Chess_v2
         private Piece CurrentPiece, piece1, piece2;
         public readonly Piece[] _pieces;
         private int x, y, oldX, oldY, b_kingX = 4, b_kingY = 0, w_kingX = 4, w_kingY = 7;
-        public int winner = -1;
+        private int w_contKing=0, w_contRookL=0, w_contRookR=0, b_contKing=0, b_contRookL=0, b_contRookR=0;
+      
 
-        private enum Player
+        public enum Player
         {
             white,
             black
         }
-        private Player currentTurn;
+        public Player currentTurn;
         public Bitmap CreateBoard(Size tileSize)
         {
             int tileWidth = tileSize.Width;
@@ -381,6 +382,11 @@ namespace Chess_v2
 
         }
 
+        private bool ShortCastle()
+        {
+            return false;
+        }
+
         private bool CanEscapeFromCheck()
         {
 
@@ -424,13 +430,13 @@ namespace Chess_v2
             return false;
         }
 
-        private bool CheckMate()
+        public bool CheckMate()
         {
             if (isInCheck() && !CanEscapeFromCheck())
                 return true;
             else return false;
         }
-        private bool Stalemate()
+        public bool Stalemate()
         {
             if (!isInCheck() && !CanEscapeFromCheck())
                 return true;
@@ -450,16 +456,20 @@ namespace Chess_v2
             }
             else
             {
-                ChangeTurn();
-                if (CheckMate())
-                {
-                    if (currentTurn == Player.black)
-                        winner = 1;
-                    else winner = 2;
-                }
-                else if (Stalemate())
-                    winner = 0;
+                if(fromX == 4 && fromY == 0)
+                    b_contKing++;
+                if(fromX == 0 && fromY == 0)
+                     b_contRookL++;
+                if(fromX == 7 && fromY == 0)
+                     b_contRookR++;
+                if(fromX == 4 && fromY == 7)
+                     w_contKing++;
+                if(fromX == 0 && fromY == 7)
+                      w_contRookL++;
+                if(fromX == 7 && fromY == 7)
+                      w_contRookR++;
 
+                ChangeTurn();      
             }
         }
 
