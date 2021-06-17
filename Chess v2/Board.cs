@@ -10,8 +10,8 @@ namespace Chess_v2
         private Piece CurrentPiece, piece1, piece2;
         public readonly Piece[] _pieces;
         private int x, y, oldX, oldY, b_kingX = 4, b_kingY = 0, w_kingX = 4, w_kingY = 7;
-        private int w_contKing=0, w_contRookL=0, w_contRookR=0, b_contKing=0, b_contRookL=0, b_contRookR=0;
-      
+        private int w_contKing = 0, w_contRookL = 0, w_contRookR = 0, b_contKing = 0, b_contRookL = 0, b_contRookR = 0;
+
 
         public enum Player
         {
@@ -384,9 +384,86 @@ namespace Chess_v2
 
         private bool ShortCastle()
         {
+            if (!isInCheck())
+            {
+
+                if ((w_contKing == 0 && w_contRookR == 0) || (b_contKing == 0 && b_contRookR == 0))
+                {
+
+                    if (currentTurn == Player.white && GetPiece(5, 7) == null && GetPiece(6, 7) == null)
+                    {
+                        SetPiece(5, 7, GetPiece(4, 7));
+                        SetPiece(4, 7, null);
+                        if (isInCheck())
+                        {
+                            SetPiece(4, 7, GetPiece(5, 7));
+                            SetPiece(5, 7, null);
+                            return false;
+                        }
+                        SetPiece(6, 7, GetPiece(5, 7));
+                        SetPiece(5, 7, null);
+                        if (isInCheck())
+                        {
+                            SetPiece(4, 7, GetPiece(6, 7));
+                            SetPiece(6, 7, null);
+                            return false;
+                        }
+                        SetPiece(4, 7, GetPiece(6, 7));
+                        SetPiece(6, 7, null);
+                        return true;
+                    }
+                    else if (currentTurn == Player.black && GetPiece(5, 0) == null && GetPiece(6, 0) == null)
+                    {
+                        SetPiece(5, 0, GetPiece(4, 0));
+                        SetPiece(4, 0, null);
+                        if (isInCheck())
+                        {
+                            SetPiece(4, 0, GetPiece(5, 0));
+                            SetPiece(5, 0, null);
+                            return false;
+                        }
+                        SetPiece(6, 0, GetPiece(5, 0));
+                        SetPiece(5, 0, null);
+                        if (isInCheck())
+                        {
+                            SetPiece(4, 0, GetPiece(6, 0));
+                            SetPiece(6, 0, null);
+                            return false;
+                        }
+                        SetPiece(4, 0, GetPiece(6, 0));
+                        SetPiece(6, 0, null);
+                        return true;
+                    }
+                }
+
+            }
             return false;
         }
 
+        private void DoShortCastle()
+        {
+
+            if (currentTurn == Player.black)
+            {
+
+                SetPiece(x, y, piece1);
+                SetPiece(4, 0, null);
+                SetPiece(x - 1, y, GetPiece(7, 0));
+                SetPiece(7, 0, null);
+                ChangeTurn();
+
+            }
+            else
+            {
+
+                SetPiece(x, y, piece1);
+                SetPiece(4, 7, null);
+                SetPiece(x - 1, y, GetPiece(7, 7));
+                SetPiece(7, 7, null);
+                ChangeTurn();
+
+            }
+        }
         private bool CanEscapeFromCheck()
         {
 
@@ -456,20 +533,19 @@ namespace Chess_v2
             }
             else
             {
-                if(fromX == 4 && fromY == 0)
+                if (fromX == 4 && fromY == 0)
                     b_contKing++;
-                if(fromX == 0 && fromY == 0)
-                     b_contRookL++;
-                if(fromX == 7 && fromY == 0)
-                     b_contRookR++;
-                if(fromX == 4 && fromY == 7)
-                     w_contKing++;
-                if(fromX == 0 && fromY == 7)
-                      w_contRookL++;
-                if(fromX == 7 && fromY == 7)
-                      w_contRookR++;
-
-                ChangeTurn();      
+                if (fromX == 0 && fromY == 0)
+                    b_contRookL++;
+                if (fromX == 7 && fromY == 0)
+                    b_contRookR++;
+                if (fromX == 4 && fromY == 7)
+                    w_contKing++;
+                if (fromX == 0 && fromY == 7)
+                    w_contRookL++;
+                if (fromX == 7 && fromY == 7)
+                    w_contRookR++;
+                ChangeTurn();
             }
         }
 
@@ -494,14 +570,19 @@ namespace Chess_v2
             else
             {
                 piece2 = GetPiece(x, y);
-
-                if (ValidMove(oldX, oldY, x, y))
+                if (piece1._type == Piece.PieceType.King && x == 6 && (y == 0 || y == 7) && ShortCastle())
                 {
-                    MakeMove(piece1, piece2, oldX, oldY, x, y);
+                    DoShortCastle();
                 }
                 else
-                    MessageBox.Show("Mutare invalidă!");
-
+                {
+                    if (ValidMove(oldX, oldY, x, y))
+                    {
+                        MakeMove(piece1, piece2, oldX, oldY, x, y);
+                    }
+                    else
+                        MessageBox.Show("Mutare invalidă!");
+                }
                 CurrentPiece = null;
             }
 

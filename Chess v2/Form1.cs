@@ -46,10 +46,7 @@ namespace Chess_v2
                  pictureBox1.Enabled = false;
                  MessageBox.Show("Egalitate!");
             }
-          
-           
-
-                
+                          
         }
     }
 
