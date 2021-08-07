@@ -13,9 +13,6 @@ namespace Chess_v2
      
         private Dictionary<Piece, Bitmap> PieceBitmaps;
         public Board board;
-
-        public int TileWidth = 100;
-        public int TileHeight = 100;
         public void InitGame()
         {
 
@@ -75,8 +72,8 @@ namespace Chess_v2
         }
         public Bitmap DrawGame()
         {
-            var tileSize = new Size(TileWidth, TileHeight);
-            Bitmap bitmap = board.CreateBoard(tileSize);
+            var tileSize = new Size(board.TileWidth, board.TileHeight);
+            Bitmap bitmap = board.CreateBoard();
             ChangePawns();
             DrawPieces(bitmap);
 
@@ -111,12 +108,13 @@ namespace Chess_v2
                         if (piece != null)
                         {
                             bitmap1 = PieceBitmaps[piece];
-                            bitmap2 = ResizeBitmap(bitmap1, TileWidth, TileHeight);
-                            graphics.DrawImage(bitmap2, new Point(x * TileWidth, y * TileHeight));
+                            bitmap2 = ResizeBitmap(bitmap1, board.TileWidth, board.TileHeight);
+                            graphics.DrawImage(bitmap2, new Point(x * board.TileWidth, y * board.TileHeight));
                         }
                     }
                 }
             }
         }
+
     }
 }
