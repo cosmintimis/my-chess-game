@@ -11,8 +11,9 @@ namespace Chess_v2
 
         }
      
-        private Dictionary<Piece, Bitmap> PieceBitmaps;
+        public Dictionary<Piece, Bitmap> PieceBitmaps;
         public Board board;
+        public int WhitePawnPromotion = -1, BlackPawnPromotion = -1;
         public void InitGame()
         {
 
@@ -54,8 +55,7 @@ namespace Chess_v2
             {
                 if (board._pieces[i] != null && board._pieces[i]._type == Piece.PieceType.Pawn)
                 {
-                    PieceBitmaps[board._pieces[i]] = new Bitmap(Properties.Resources.queen_white);
-                    board._pieces[i]._type = Piece.PieceType.Queen;
+                    WhitePawnPromotion = i;
 
                 }
             }
@@ -63,8 +63,8 @@ namespace Chess_v2
             {
                 if (board._pieces[i] != null && board._pieces[i]._type == Piece.PieceType.Pawn)
                 {
-                    PieceBitmaps[board._pieces[i]] = new Bitmap(Properties.Resources.queen_black);
-                    board._pieces[i]._type = Piece.PieceType.Queen;
+
+                    BlackPawnPromotion = i - 56;
 
                 }
 
@@ -72,7 +72,6 @@ namespace Chess_v2
         }
         public Bitmap DrawGame()
         {
-            var tileSize = new Size(board.TileWidth, board.TileHeight);
             Bitmap bitmap = board.CreateBoard();
             ChangePawns();
             DrawPieces(bitmap);
@@ -80,7 +79,7 @@ namespace Chess_v2
             return bitmap;
 
         }
-        private Bitmap ResizeBitmap(Bitmap bmp, int width, int height)
+        public Bitmap ResizeBitmap(Bitmap bmp, int width, int height)
         {
             Bitmap result = new Bitmap(width, height, PixelFormat.Format32bppPArgb);
             using (Graphics g = Graphics.FromImage(result))

@@ -7,9 +7,10 @@ namespace Chess_v2
     public class Board
     {
 
-        private Piece CurrentPiece, PiecePicked, SquareToDrop;
+        public Piece CurrentPiece, PiecePicked, SquareToDrop, LastPieceMoved;
         public readonly Piece[] _pieces;
-        private int x, y, oldX, oldY, b_kingX = 4, b_kingY = 0, w_kingX = 4, w_kingY = 7;
+        public int x, y, oldX, oldY, b_kingX = 4, b_kingY = 0, w_kingX = 4, w_kingY = 7;
+        private int[] LastPieceMovedCoordinates = new int[] {-1, -1, -1, -1};
         private int w_contKing = 0, w_contRookL = 0, w_contRookR = 0, b_contKing = 0, b_contRookL = 0, b_contRookR = 0;
 
         public int TileWidth = 100;
@@ -266,7 +267,7 @@ namespace Chess_v2
             return false;
 
         }
-        private bool ValidMove(int fromX, int fromY, int toX, int toY)
+        public bool ValidMove(int fromX, int fromY, int toX, int toY)
         {
            
             Piece MovedPiece = GetPiece(fromX, fromY);
@@ -334,15 +335,16 @@ namespace Chess_v2
 
         }
 
-        private void updateKingPosition(Piece piece, int x, int y)
+        private void updateKingPosition(Piece king, int x, int y)
         {
-            if (piece != null)
-                if (piece._type == Piece.PieceType.King)
+            if (king != null)
+                if (king._type == Piece.PieceType.King)
                 {
-                    if (piece._color == Piece.PieceColor.Black)
+                    if (king._color == Piece.PieceColor.Black)
                     {
                         b_kingX = x;
                         b_kingY = y;
+                        
                     }
                     else
                     {
@@ -356,36 +358,14 @@ namespace Chess_v2
         {
             if (currentTurn == Player.black)
             {
-                for (int y = 0; y < 8; y++)
-                {
-                    for (int x = 0; x < 8; x++)
-                    {
-                        Piece piece = GetPiece(x, y);
-                        if (piece != null && piece._color != Piece.PieceColor.Black)
-                        {
-                            if (ValidMove(x, y, b_kingX, b_kingY))
-                                return true;
-                        }
-
-                    }
-                }
+                if (SquareIsAttacked(b_kingX, b_kingY))
+                    return true;
                 return false;
             }
             else
             {
-                for (int y = 0; y < 8; y++)
-                {
-                    for (int x = 0; x < 8; x++)
-                    {
-                        Piece piece = GetPiece(x, y);
-                        if (piece != null && piece._color != Piece.PieceColor.White)
-                        {
-                            if (ValidMove(x, y, w_kingX, w_kingY))
-                                return true;
-                        }
-
-                    }
-                }
+                if (SquareIsAttacked(w_kingX, w_kingY))
+                    return true;
                 return false;
             }
 
@@ -421,12 +401,13 @@ namespace Chess_v2
 
            }
 
+           /// Check for knight possible attack
            for(int i = 0; i <= 7; i++)
            {
                 if(ValidMove(x + knight_X[i], y + knight_Y[i], x, y) &&  string.Equals(currentTurn.ToString(),GetPiece(x + knight_X[i], y + knight_Y[i])._color.ToString(), StringComparison.OrdinalIgnoreCase) == false )
                     return true;
            }
-
+           /// Check for vert and horizontally
            for(int i = 0; i <= 7; i++)
            {
                 if(ValidMove(x, i, x, y) && GetPiece(x, i)._type != Piece.PieceType.Pawn &&  string.Equals(currentTurn.ToString(),GetPiece(x, i)._color.ToString(), StringComparison.OrdinalIgnoreCase) == false)
@@ -434,6 +415,7 @@ namespace Chess_v2
                 if(ValidMove(i, y, x, y) &&  GetPiece(i, y)._type != Piece.PieceType.Pawn && string.Equals(currentTurn.ToString(),GetPiece(i, y)._color.ToString(), StringComparison.OrdinalIgnoreCase) == false)
                     return true;
            }
+           /// Check for all diagonals
            int copyX = x; int copyY = y;
            while(copyX > 0 && copyY > 0)
            {
@@ -515,31 +497,33 @@ namespace Chess_v2
         }
 
 
-        private bool CanDoCastle(Piece PiecePicked, int toX, int toY)
+        public bool CanDoCastle(int fromX, int fromY, int toX, int toY)
         {
-            if(PiecePicked._type != Piece.PieceType.King)
+            Piece king = GetPiece(fromX, fromY);
+
+            if(king._type != Piece.PieceType.King)
                 return false;
 
             /// Check for LongCastelBlack
-            if(toX == 2 && toY == 0 && b_contKing == 0 && b_contRookL == 0 && GetPiece(toX - 1, toY) == null && GetPiece(toX, toY) == null && GetPiece(toX + 1, toY) == null)
+            if(GetPiece(0, 0) != null && GetPiece(0,0)._type == Piece.PieceType.Rook && toX == 2 && toY == 0 && b_contKing == 0 && b_contRookL == 0 && GetPiece(toX - 1, toY) == null && GetPiece(toX, toY) == null && GetPiece(toX + 1, toY) == null)
             {
                 if(SquareIsAttacked(b_kingX,b_kingY) == false && SquareIsAttacked(b_kingX - 1, b_kingY) == false && SquareIsAttacked(b_kingX - 2, b_kingY) == false)
                     return true;
             }
             /// Check for ShortCastelBlack
-            if(toX == 6 && toY == 0 && b_contKing == 0 && b_contRookR == 0 && GetPiece(toX - 1, toY) == null && GetPiece(toX, toY) == null)
+            if(GetPiece(7, 0) != null && GetPiece(7, 0)._type == Piece.PieceType.Rook && toX == 6 && toY == 0 && b_contKing == 0 && b_contRookR == 0 && GetPiece(toX - 1, toY) == null && GetPiece(toX, toY) == null)
             {
                 if(SquareIsAttacked(b_kingX,b_kingY) == false && SquareIsAttacked(b_kingX + 1, b_kingY) == false && SquareIsAttacked(b_kingX + 2, b_kingY) == false)
                     return true;
             }
             /// Check for LongCastelWhite
-            if(toX == 2 && toY == 7 && w_contKing == 0 && w_contRookL == 0 && GetPiece(toX - 1, toY) == null && GetPiece(toX, toY) == null && GetPiece(toX + 1, toY) == null)
+            if(GetPiece(0, 7) != null && GetPiece(0, 7)._type == Piece.PieceType.Rook && toX == 2 && toY == 7 && w_contKing == 0 && w_contRookL == 0 && GetPiece(toX - 1, toY) == null && GetPiece(toX, toY) == null && GetPiece(toX + 1, toY) == null)
             {
                 if(SquareIsAttacked(w_kingX,w_kingY) == false && SquareIsAttacked(w_kingX - 1, w_kingY) == false && SquareIsAttacked(w_kingX - 2, w_kingY) == false)
                     return true;
             }
             /// Check for ShortCastelWhite
-            if(toX == 6 && toY == 7 && b_contKing == 0 && b_contRookR == 0 && GetPiece(toX - 1, toY) == null && GetPiece(toX, toY) == null)
+            if(GetPiece(7, 7) != null && GetPiece(7, 7)._type == Piece.PieceType.Rook && toX == 6 && toY == 7 && w_contKing == 0 && w_contRookR == 0 && GetPiece(toX - 1, toY) == null && GetPiece(toX, toY) == null)
             {
                 if(SquareIsAttacked(w_kingX,w_kingY) == false && SquareIsAttacked(w_kingX + 1, w_kingY) == false && SquareIsAttacked(w_kingX + 2, w_kingY) == false)
                     return true;
@@ -553,7 +537,9 @@ namespace Chess_v2
         {
             if (isInCheck() && !CanEscapeFromCheck())
                 return true;
-            else return false;
+            else
+                return false;
+            
         }
         public bool Stalemate()
         {
@@ -571,6 +557,8 @@ namespace Chess_v2
             {
                 SetPiece(fromX, fromY, p1);
                 SetPiece(toX, toY, p2);
+                updateKingPosition(p1, fromX, fromY);
+              ///  MessageBox.Show("Nu se poate!");
             }
             else
             {
@@ -590,6 +578,68 @@ namespace Chess_v2
             }
         }
 
+        public bool CanMakeThatMove(int fromX, int fromY, int toX, int toY)
+        {
+            Piece p1 = GetPiece(fromX, fromY), p2 = GetPiece(toX, toY);
+
+            SetPiece(fromX, fromY, null);
+            SetPiece(toX, toY, p1);
+            updateKingPosition(p1, toX, toY);
+            if (isInCheck() || (p2 != null && (p2.SameColor(p1) == true || p2._type == Piece.PieceType.King)))
+            {
+                SetPiece(fromX, fromY, p1);
+                SetPiece(toX, toY, p2);
+                updateKingPosition(p1, fromX, fromY);
+                return false;
+            }
+            else
+            {
+                SetPiece(fromX, fromY, p1);
+                SetPiece(toX, toY, p2);
+                updateKingPosition(p1, fromX, fromY);
+                return true;
+            }
+        }
+
+
+
+
+        private void UpdateLastPieceMoved(Piece PieceMoved, int fromX, int fromY, int toX, int toY)
+        {
+            LastPieceMoved = PieceMoved;
+            LastPieceMovedCoordinates[0] = fromX;
+            LastPieceMovedCoordinates[1] = fromY;
+            LastPieceMovedCoordinates[2] = toX;
+            LastPieceMovedCoordinates[3] = toY;
+        
+        }
+
+        public bool CanDoEnPassant(int fromX, int fromY, int toX, int toY)
+        {
+            Piece PawnThatAttack = GetPiece(fromX, fromY);
+
+            if (PawnThatAttack._type != Piece.PieceType.Pawn)
+                return false;
+            if (LastPieceMoved != null && LastPieceMoved._type != Piece.PieceType.Pawn)
+                return false;
+            if (Math.Abs(LastPieceMovedCoordinates[3] - LastPieceMovedCoordinates[1]) != 2) /// Check for double square move
+                return false;
+            if(PawnThatAttack._color == Piece.PieceColor.White)
+            {
+                if (fromY == 3 && LastPieceMovedCoordinates[3] == 3 && toX == LastPieceMovedCoordinates[2] && toY == LastPieceMovedCoordinates[1] + 1)
+                    return true;
+            }
+            else
+            {
+                if (fromY == 4 && LastPieceMovedCoordinates[3] == 4 && toX == LastPieceMovedCoordinates[2] && toY == LastPieceMovedCoordinates[1] - 1)
+                    return true;
+            }
+
+            return false;
+
+        }
+
+       
         public void PickOrDropPiece(MouseEventArgs e, int tileWidth, int tileHeight)
         {
           
@@ -597,13 +647,12 @@ namespace Chess_v2
             x = location.X / tileWidth;
             y = location.Y / tileHeight;
 
-            bool pickOrDrop = CurrentPiece == null;
+            if (GetPiece(x, y) != null && GetPiece(x, y) != GetPiece(oldX, oldY) && string.Equals(currentTurn.ToString(), GetPiece(x, y)._color.ToString(), StringComparison.OrdinalIgnoreCase))
+                CurrentPiece = null;
 
-            if(SquareIsAttacked(x,y))
-              MessageBox.Show("CASUTA ATACATA!");
-            else MessageBox.Show("neatacat!");
+            bool PickOrDrop = CurrentPiece == null;
 
-            if (pickOrDrop)
+            if (PickOrDrop)
             {
                 PiecePicked = GetPiece(x, y);
                 oldX = x;
@@ -619,38 +668,53 @@ namespace Chess_v2
 
                 SquareToDrop = GetPiece(x, y);
 
-                if(CanDoCastle(PiecePicked, x, y))
+                if (CanDoCastle(oldX, oldY, x, y))
                 {
-                   if(x < 4)
-                   {
+                    if (x < 4)
+                    {
                         SetPiece(x, y, PiecePicked);
                         SetPiece(oldX, oldY, null);
                         SetPiece(x + 1, y, GetPiece(0, y));
                         SetPiece(0, y, null);
-                        updateKingPosition(PiecePicked, x, y);
-                        ChangeTurn();
-                   }
-                   else
-                   {
+                        
+                    }
+                    else
+                    {
                         SetPiece(x, y, PiecePicked);
                         SetPiece(oldX, oldY, null);
                         SetPiece(x - 1, y, GetPiece(7, y));
                         SetPiece(7, y, null);
-                        updateKingPosition(PiecePicked, x, y);
-                        ChangeTurn();
-                   }
+
+                    }
+                    if (PiecePicked._color == Piece.PieceColor.Black)
+                        b_contKing++;
+                    else w_contKing++;
+                    updateKingPosition(PiecePicked, x, y);
+                    UpdateLastPieceMoved(PiecePicked, oldX, oldY, x, y);
+                    ChangeTurn();
+                    CurrentPiece = null;
+
+                }
+                else if (CanDoEnPassant(oldX, oldY, x, y))
+                {
+                    SetPiece(LastPieceMovedCoordinates[2], LastPieceMovedCoordinates[3], null);
+                    SetPiece(x, y, PiecePicked);
+                    SetPiece(oldX, oldY, null);
+                    UpdateLastPieceMoved(PiecePicked, oldX, oldY, x, y);
+                    ChangeTurn();
+                    CurrentPiece = null;
                 }
                 else
-                {
-                    if(ValidMove(oldX, oldY, x, y))
+                { 
+                    
+                    if (ValidMove(oldX, oldY, x, y))
                     {
                         MakeMove(PiecePicked, SquareToDrop, oldX, oldY, x, y);
+                        UpdateLastPieceMoved(PiecePicked, oldX, oldY, x, y);
+                        CurrentPiece = null;
                     }
-                    else
-                        MessageBox.Show("Mutare invalidă!");
                 }
                
-                CurrentPiece = null;
             }
 
         }
