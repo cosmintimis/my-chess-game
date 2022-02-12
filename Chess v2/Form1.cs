@@ -241,7 +241,8 @@ namespace Chess_v2
             {
                 for (int y = 0; y < 8; y++)
                 {
-                    if(game.board.CanDoCastle(game.board.oldX, game.board.oldY, x, y) || game.board.CanDoEnPassant(game.board.oldX, game.board.oldY, x, y) || (game.board.ValidMove(game.board.oldX, game.board.oldY, x, y) && game.board.CanMakeThatMove(game.board.oldX, game.board.oldY, x, y)))
+                    
+                    if (game.board.CanDoCastle(game.board.oldX, game.board.oldY, x, y) || game.board.CanDoEnPassant(game.board.oldX, game.board.oldY, x, y) || (game.board.PieceCanMove(game.board.oldX, game.board.oldY, x, y) && game.board.LegalMove(game.board.oldX, game.board.oldY, x, y)))
                     {
                         Graphics g = Graphics.FromImage(pictureBox1.Image);
                         Brush brush = new SolidBrush(Color.FromArgb(80, Color.Yellow));
@@ -256,15 +257,21 @@ namespace Chess_v2
         private void PictureBox1_MouseDown(object sender, MouseEventArgs e)
         {
             game.board.PickOrDropPiece(e, game.board.TileWidth, game.board.TileHeight);
-            pictureBox1.Image = game.DrawGame();
 
             if (game.board.CurrentPiece != null)
             {
+                pictureBox1.Image = game.DrawGame();
                 DrawingAllPossibleMoves();
             }
-            GameOver();
 
-            //SquareDrawingOnClick(e);
+            if (game.board.PieceWasMoved == true)
+            {
+                GameOver();
+                pictureBox1.Image = game.DrawGame();
+                game.board.PieceWasMoved = false;
+            }
+
+          ///  SquareDrawingOnClick(e);
 
             if (game.WhitePawnPromotion != -1)
             {
@@ -275,8 +282,7 @@ namespace Chess_v2
                 PromotePawnMenu(game.BlackPawnPromotion * game.board.TileWidth, game.board.TileHeight * 4, Piece.PieceColor.Black);
             }
 
-            f0.Text = "Chess          Turn: " + game.board.currentTurn;
-           
+            f0.Text = "Chess          Turn: " + game.board.currentTurn;    
         }
 
         private void Form1_ClientSizeChanged(object sender, EventArgs e)

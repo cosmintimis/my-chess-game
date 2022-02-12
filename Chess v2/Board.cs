@@ -6,12 +6,13 @@ namespace Chess_v2
 {
     public class Board
     {
-
         public Piece CurrentPiece, PiecePicked, SquareToDrop, LastPieceMoved;
         public readonly Piece[] _pieces;
         public int x, y, oldX, oldY, b_kingX = 4, b_kingY = 0, w_kingX = 4, w_kingY = 7;
-        private int[] LastPieceMovedCoordinates = new int[] {-1, -1, -1, -1};
+        public bool PieceWasMoved = false;
+        private int[] LastPieceMovedCoordinates = new int[] { -1, -1, -1, -1 };
         private int w_contKing = 0, w_contRookL = 0, w_contRookR = 0, b_contKing = 0, b_contRookL = 0, b_contRookR = 0;
+
 
         public int TileWidth = 100;
         public int TileHeight = 100;
@@ -22,6 +23,16 @@ namespace Chess_v2
             black
         }
         public Player currentTurn = Player.white;
+        public Piece.PieceColor OppositeColor = Piece.PieceColor.Black;
+
+        public Board()
+        {
+            _pieces = new Piece[64];
+            InitPieces();
+            PopulatePieces();
+        }
+
+        /// Board drawing 
         public Bitmap CreateBoard()
         {
             var bitmap = new Bitmap(TileWidth * 8, TileHeight * 8);
@@ -38,16 +49,9 @@ namespace Chess_v2
             }
             return bitmap;
         }
-        public Board()
-        {
-            _pieces = new Piece[64];
-            InitPieces();
-            PopulatePieces();
-        }
-
         public Piece GetPiece(int x, int y)
         {
-            if(x >= 0 && x <= 7 && y >= 0 && y <= 7)
+            if (x >= 0 && x <= 7 && y >= 0 && y <= 7)
             {
                 int i = y * 8 + x;
                 return _pieces[i];
@@ -98,8 +102,6 @@ namespace Chess_v2
 
         private void PopulatePieces()
         {
-
-
             SetPiece(0, 0, _pieces[0]);
             SetPiece(1, 0, _pieces[1]);
             SetPiece(2, 0, _pieces[2]);
@@ -124,6 +126,20 @@ namespace Chess_v2
 
                 SetPiece(i, 1, _pieces[++j]);
                 SetPiece(i, 6, _pieces[++jj]);
+            }
+        }
+
+        private void ChangeTurn()
+        {
+            if (currentTurn == Player.white)
+            {
+                currentTurn = Player.black;
+                OppositeColor = Piece.PieceColor.White;
+            }
+            else
+            {
+                currentTurn = Player.white;
+                OppositeColor = Piece.PieceColor.Black;
             }
 
         }
@@ -267,13 +283,37 @@ namespace Chess_v2
             return false;
 
         }
-        public bool ValidMove(int fromX, int fromY, int toX, int toY)
+
+        /// Verify if the move is legal
+        public bool LegalMove(int fromX, int fromY, int toX, int toY)
         {
-           
+            Piece p1 = GetPiece(fromX, fromY), p2 = GetPiece(toX, toY);
+
+            SetPiece(fromX, fromY, null);
+            SetPiece(toX, toY, p1);
+            updateKingPosition(p1, toX, toY);
+            if (isInCheck() || (p2 != null && (p2.SameColor(p1) == true || p2._type == Piece.PieceType.King)))
+            {
+                SetPiece(fromX, fromY, p1);
+                SetPiece(toX, toY, p2);
+                updateKingPosition(p1, fromX, fromY);
+                return false;
+            }
+            SetPiece(fromX, fromY, p1);
+            SetPiece(toX, toY, p2);
+            updateKingPosition(p1, fromX, fromY);
+            return true;
+
+        }
+        public bool PieceCanMove(int fromX, int fromY, int toX, int toY)
+        {
+
             Piece MovedPiece = GetPiece(fromX, fromY);
             Piece SquareToMove = GetPiece(toX, toY);
 
-            if(MovedPiece == null)
+            if (MovedPiece == null)
+                return false;
+            if (SquareToMove != null && SquareToMove.SameColor(MovedPiece))
                 return false;
             switch (MovedPiece._type)
             {
@@ -281,13 +321,13 @@ namespace Chess_v2
                     if (Math.Abs(fromX - toX) * Math.Abs(fromY - toY) == 2)
                         return true;
                     return false;
-                case Piece.PieceType.Pawn:
 
+                case Piece.PieceType.Pawn:
                     if (MovedPiece._color == Piece.PieceColor.White)
                     {
-                        if (SquareToMove == null && fromX == toX && (fromY - toY == 1 ||  (fromY == 6 && ((fromY - toY == 1) || (fromY - toY == 2 && GetPiece(fromX, fromY - 1) == null)))))
+                        if (SquareToMove == null && fromX == toX && (fromY - toY == 1 || (fromY == 6 && ((fromY - toY == 1) || (fromY - toY == 2 && GetPiece(fromX, fromY - 1) == null)))))
                             return true;
-                        
+
                         if (fromY - 1 == toY && (toX + 1 == fromX || toX - 1 == fromX) && SquareToMove != null)
                             return true;
                     }
@@ -295,7 +335,7 @@ namespace Chess_v2
                     {
                         if (SquareToMove == null && fromX == toX && (fromY - toY == -1 || (fromY == 1 && ((fromY - toY == -1) || (fromY - toY == -2 && GetPiece(fromX, fromY + 1) == null)))))
                             return true;
-                       
+
                         if (fromY + 1 == toY && (toX + 1 == fromX || toX - 1 == fromX) && SquareToMove != null)
                             return true;
 
@@ -326,15 +366,77 @@ namespace Chess_v2
             }
         }
 
-        private void ChangeTurn()
+        /// All possible moves of a knight
+        readonly int[] knight_X = new int[] { 2, 1, -1, -2, -2, -1, 1, 2 };
+        readonly int[] knight_Y = new int[] { 1, 2, 2, 1, -1, -2, -2, -1 };
+        private bool SquareIsAttacked(int x, int y)
         {
-            if (currentTurn == Player.white)
-                currentTurn = Player.black;
-            else currentTurn = Player.white;
+            /// Check if a white pawn attack
+            Piece Pawn = GetPiece(x - 1, y + 1);
+            if (Pawn != null && Pawn._type == Piece.PieceType.Pawn && Pawn._color == OppositeColor)
+                return true;
+            Pawn = GetPiece(x + 1, y + 1);
+            if (Pawn != null && Pawn._type == Piece.PieceType.Pawn && Pawn._color == OppositeColor)
+                return true;
 
+            /// Check if a black pawn attack
+            Pawn = GetPiece(x - 1, y - 1);
+            if (Pawn != null && Pawn._type == Piece.PieceType.Pawn && Pawn._color == OppositeColor)
+                return true;
+            Pawn = GetPiece(x + 1, y - 1);
+            if (Pawn != null && Pawn._type == Piece.PieceType.Pawn && Pawn._color == OppositeColor)
+                return true;
 
+            /// Check for knight possible attackk
+            for (int i = 0; i <= 7; i++)
+            {
+                if (PieceCanMove(x + knight_X[i], y + knight_Y[i], x, y) && GetPiece(x + knight_X[i], y + knight_Y[i])._color == OppositeColor)
+                    return true;
+            }
+            /// Check for vert and horizontally
+            for (int i = 0; i <= 7; i++)
+            {
+                if (PieceCanMove(x, i, x, y) && GetPiece(x, i)._type != Piece.PieceType.Pawn && GetPiece(x, i)._color == OppositeColor)
+                    return true;
+                if (PieceCanMove(i, y, x, y) && GetPiece(i, y)._type != Piece.PieceType.Pawn && GetPiece(i, y)._color == OppositeColor)
+                    return true;
+            }
+            /// Check for all diagonals
+            int copyX = x; int copyY = y;
+            while (copyX > 0 && copyY > 0)
+            {
+                if (PieceCanMove(copyX - 1, copyY - 1, x, y) && GetPiece(copyX - 1, copyY - 1)._color == OppositeColor)
+                    return true;
+                copyX--;
+                copyY--;
+            }
+            copyX = x; copyY = y;
+            while (copyX < 7 && copyY < 7)
+            {
+                if (PieceCanMove(copyX + 1, copyY + 1, x, y) && GetPiece(copyX + 1, copyY + 1)._color == OppositeColor)
+                    return true;
+                copyX++;
+                copyY++;
+            }
+            copyX = x; copyY = y;
+            while (copyX > 0 && copyY < 7)
+            {
+                if (PieceCanMove(copyX - 1, copyY + 1, x, y) && GetPiece(copyX - 1, copyY + 1)._color == OppositeColor)
+                    return true;
+                copyX--;
+                copyY++;
+            }
+            copyX = x; copyY = y;
+            while (copyX < 7 && copyY > 0)
+            {
+                if (PieceCanMove(copyX + 1, copyY - 1, x, y) && GetPiece(copyX + 1, copyY - 1)._color == OppositeColor)
+                    return true;
+                copyX++;
+                copyY--;
+            }
+
+            return false;
         }
-
         private void updateKingPosition(Piece king, int x, int y)
         {
             if (king != null)
@@ -344,7 +446,7 @@ namespace Chess_v2
                     {
                         b_kingX = x;
                         b_kingY = y;
-                        
+
                     }
                     else
                     {
@@ -370,89 +472,6 @@ namespace Chess_v2
             }
 
         }
-
-         /// All possible moves of a knight
-        int[] knight_X = new int[] { 2, 1, -1, -2, -2, -1, 1, 2 };
-        int[] knight_Y = new int[] { 1, 2, 2, 1, -1, -2, -2, -1 };
-
-        private bool SquareIsAttacked(int x,int y)
-        {
-
-           /// Check if there is one pawn that can attack
-           if(currentTurn == Player.white)
-           {
-                Piece PossibleAttacker1 = GetPiece(x - 1, y - 1), PossibleAttacker2 = GetPiece(x + 1, y - 1);
-
-                if(PossibleAttacker1 != null && PossibleAttacker1._type == Piece.PieceType.Pawn && PossibleAttacker1._color == Piece.PieceColor.Black)
-                    return true;
-
-                if(PossibleAttacker2 != null && PossibleAttacker2._type == Piece.PieceType.Pawn && PossibleAttacker2._color == Piece.PieceColor.Black)
-                    return true;
-           }
-           else
-           {
-                Piece PossibleAttacker1 = GetPiece(x - 1, y + 1), PossibleAttacker2 = GetPiece(x + 1, y + 1);
-
-                if(PossibleAttacker1 != null && PossibleAttacker1._type == Piece.PieceType.Pawn && PossibleAttacker1._color == Piece.PieceColor.White)
-                    return true;
-
-                if(PossibleAttacker2 != null && PossibleAttacker2._type == Piece.PieceType.Pawn && PossibleAttacker2._color == Piece.PieceColor.White)
-                    return true;
-
-           }
-
-           /// Check for knight possible attack
-           for(int i = 0; i <= 7; i++)
-           {
-                if(ValidMove(x + knight_X[i], y + knight_Y[i], x, y) &&  string.Equals(currentTurn.ToString(),GetPiece(x + knight_X[i], y + knight_Y[i])._color.ToString(), StringComparison.OrdinalIgnoreCase) == false )
-                    return true;
-           }
-           /// Check for vert and horizontally
-           for(int i = 0; i <= 7; i++)
-           {
-                if(ValidMove(x, i, x, y) && GetPiece(x, i)._type != Piece.PieceType.Pawn &&  string.Equals(currentTurn.ToString(),GetPiece(x, i)._color.ToString(), StringComparison.OrdinalIgnoreCase) == false)
-                    return true;
-                if(ValidMove(i, y, x, y) &&  GetPiece(i, y)._type != Piece.PieceType.Pawn && string.Equals(currentTurn.ToString(),GetPiece(i, y)._color.ToString(), StringComparison.OrdinalIgnoreCase) == false)
-                    return true;
-           }
-           /// Check for all diagonals
-           int copyX = x; int copyY = y;
-           while(copyX > 0 && copyY > 0)
-           {
-                if(ValidMove(copyX - 1, copyY - 1, x, y) && string.Equals(currentTurn.ToString(),GetPiece(copyX - 1, copyY - 1)._color.ToString(), StringComparison.OrdinalIgnoreCase) == false)
-                    return true;
-                copyX--;
-                copyY--;
-           }
-           copyX = x; copyY = y;
-           while(copyX < 7 && copyY < 7)
-           {
-                if(ValidMove(copyX + 1, copyY + 1, x, y) &&  string.Equals(currentTurn.ToString(),GetPiece(copyX + 1, copyY + 1)._color.ToString(), StringComparison.OrdinalIgnoreCase) == false)
-                    return true;
-                copyX++;
-                copyY++;
-           }
-           copyX = x; copyY = y;
-           while(copyX > 0 && copyY < 7)
-           {
-                if(ValidMove(copyX - 1, copyY + 1, x, y) && string.Equals(currentTurn.ToString(),GetPiece(copyX - 1, copyY + 1)._color.ToString(), StringComparison.OrdinalIgnoreCase) == false)
-                    return true;
-                copyX--;
-                copyY++;
-           }
-           copyX = x; copyY = y;
-           while(copyX < 7 && copyY > 0)
-           {
-                if(ValidMove(copyX + 1, copyY - 1, x, y) && string.Equals(currentTurn.ToString(),GetPiece(copyX + 1, copyY - 1)._color.ToString(), StringComparison.OrdinalIgnoreCase) == false)
-                    return true;
-                copyX++;
-                copyY--;
-           }
-           return false;
-
-
-        }
-        
         private bool CanEscapeFromCheck()
         {
 
@@ -462,32 +481,15 @@ namespace Chess_v2
                 {
                     Piece piece1 = GetPiece(x, y);
 
-                    if (piece1 != null && ((piece1._color == Piece.PieceColor.Black && currentTurn == Player.black) || (piece1._color == Piece.PieceColor.White && currentTurn == Player.white)))
+                    if (piece1 != null && piece1._color != OppositeColor)
                     {
                         for (int yy = 0; yy < 8; yy++)
                         {
                             for (int xx = 0; xx < 8; xx++)
                             {
-                                Piece piece2 = GetPiece(xx, yy);
-                                if (ValidMove(x, y, xx, yy))
-                                {
-                                    SetPiece(x, y, null);
-                                    SetPiece(xx, yy, piece1);
-                                    updateKingPosition(piece1, xx, yy);
-                                    if (isInCheck() || (piece2 != null && (piece2.SameColor(piece1) == true || piece2._type == Piece.PieceType.King)))
-                                    {
-                                        SetPiece(x, y, piece1);
-                                        SetPiece(xx, yy, piece2);
-                                        updateKingPosition(piece1, x, y);
-                                    }
-                                    else
-                                    {
-                                        SetPiece(x, y, piece1);
-                                        SetPiece(xx, yy, piece2);
-                                        updateKingPosition(piece1, x, y);
-                                        return true;
-                                    }
-                                }
+                                if (PieceCanMove(x, y, xx, yy) && LegalMove(x, y, xx, yy))
+                                    return true;
+                                         
                             }
                         }
                     }
@@ -496,50 +498,13 @@ namespace Chess_v2
             return false;
         }
 
-
-        public bool CanDoCastle(int fromX, int fromY, int toX, int toY)
-        {
-            Piece king = GetPiece(fromX, fromY);
-
-            if(king._type != Piece.PieceType.King)
-                return false;
-
-            /// Check for LongCastelBlack
-            if(GetPiece(0, 0) != null && GetPiece(0,0)._type == Piece.PieceType.Rook && toX == 2 && toY == 0 && b_contKing == 0 && b_contRookL == 0 && GetPiece(toX - 1, toY) == null && GetPiece(toX, toY) == null && GetPiece(toX + 1, toY) == null)
-            {
-                if(SquareIsAttacked(b_kingX,b_kingY) == false && SquareIsAttacked(b_kingX - 1, b_kingY) == false && SquareIsAttacked(b_kingX - 2, b_kingY) == false)
-                    return true;
-            }
-            /// Check for ShortCastelBlack
-            if(GetPiece(7, 0) != null && GetPiece(7, 0)._type == Piece.PieceType.Rook && toX == 6 && toY == 0 && b_contKing == 0 && b_contRookR == 0 && GetPiece(toX - 1, toY) == null && GetPiece(toX, toY) == null)
-            {
-                if(SquareIsAttacked(b_kingX,b_kingY) == false && SquareIsAttacked(b_kingX + 1, b_kingY) == false && SquareIsAttacked(b_kingX + 2, b_kingY) == false)
-                    return true;
-            }
-            /// Check for LongCastelWhite
-            if(GetPiece(0, 7) != null && GetPiece(0, 7)._type == Piece.PieceType.Rook && toX == 2 && toY == 7 && w_contKing == 0 && w_contRookL == 0 && GetPiece(toX - 1, toY) == null && GetPiece(toX, toY) == null && GetPiece(toX + 1, toY) == null)
-            {
-                if(SquareIsAttacked(w_kingX,w_kingY) == false && SquareIsAttacked(w_kingX - 1, w_kingY) == false && SquareIsAttacked(w_kingX - 2, w_kingY) == false)
-                    return true;
-            }
-            /// Check for ShortCastelWhite
-            if(GetPiece(7, 7) != null && GetPiece(7, 7)._type == Piece.PieceType.Rook && toX == 6 && toY == 7 && w_contKing == 0 && w_contRookR == 0 && GetPiece(toX - 1, toY) == null && GetPiece(toX, toY) == null)
-            {
-                if(SquareIsAttacked(w_kingX,w_kingY) == false && SquareIsAttacked(w_kingX + 1, w_kingY) == false && SquareIsAttacked(w_kingX + 2, w_kingY) == false)
-                    return true;
-            }
-            
-            return false;
-
-        }
-
         public bool CheckMate()
         {
             if (isInCheck() && !CanEscapeFromCheck())
                 return true;
             else
                 return false;
-            
+
         }
         public bool Stalemate()
         {
@@ -553,56 +518,22 @@ namespace Chess_v2
             SetPiece(fromX, fromY, null);
             SetPiece(toX, toY, p1);
             updateKingPosition(p1, toX, toY);
-            if (isInCheck() || (p2 != null && (p2.SameColor(p1) == true || p2._type == Piece.PieceType.King)))
-            {
-                SetPiece(fromX, fromY, p1);
-                SetPiece(toX, toY, p2);
-                updateKingPosition(p1, fromX, fromY);
-              ///  MessageBox.Show("Nu se poate!");
-            }
-            else
-            {
-                if (fromX == 4 && fromY == 0)
-                    b_contKing++;
-                if (fromX == 0 && fromY == 0)
-                    b_contRookL++;
-                if (fromX == 7 && fromY == 0)
-                    b_contRookR++;
-                if (fromX == 4 && fromY == 7)
-                    w_contKing++;
-                if (fromX == 0 && fromY == 7)
-                    w_contRookL++;
-                if (fromX == 7 && fromY == 7)
-                    w_contRookR++;
-                ChangeTurn();
-            }
+
+            if (fromX == 4 && fromY == 0)
+                b_contKing++;
+            if (fromX == 0 && fromY == 0)
+                b_contRookL++;
+            if (fromX == 7 && fromY == 0)
+                b_contRookR++;
+            if (fromX == 4 && fromY == 7)
+                w_contKing++;
+            if (fromX == 0 && fromY == 7)
+                w_contRookL++;
+            if (fromX == 7 && fromY == 7)
+                w_contRookR++;
+            ChangeTurn();
+
         }
-
-        public bool CanMakeThatMove(int fromX, int fromY, int toX, int toY)
-        {
-            Piece p1 = GetPiece(fromX, fromY), p2 = GetPiece(toX, toY);
-
-            SetPiece(fromX, fromY, null);
-            SetPiece(toX, toY, p1);
-            updateKingPosition(p1, toX, toY);
-            if (isInCheck() || (p2 != null && (p2.SameColor(p1) == true || p2._type == Piece.PieceType.King)))
-            {
-                SetPiece(fromX, fromY, p1);
-                SetPiece(toX, toY, p2);
-                updateKingPosition(p1, fromX, fromY);
-                return false;
-            }
-            else
-            {
-                SetPiece(fromX, fromY, p1);
-                SetPiece(toX, toY, p2);
-                updateKingPosition(p1, fromX, fromY);
-                return true;
-            }
-        }
-
-
-
 
         private void UpdateLastPieceMoved(Piece PieceMoved, int fromX, int fromY, int toX, int toY)
         {
@@ -611,7 +542,43 @@ namespace Chess_v2
             LastPieceMovedCoordinates[1] = fromY;
             LastPieceMovedCoordinates[2] = toX;
             LastPieceMovedCoordinates[3] = toY;
-        
+
+        }
+
+        public bool CanDoCastle(int fromX, int fromY, int toX, int toY)
+        {
+            Piece king = GetPiece(fromX, fromY);
+
+            if (king._type != Piece.PieceType.King)
+                return false;
+
+            /// Check for LongCastelBlack
+            if (GetPiece(0, 0) != null && GetPiece(0, 0)._type == Piece.PieceType.Rook && toX == 2 && toY == 0 && b_contKing == 0 && b_contRookL == 0 && GetPiece(toX - 1, toY) == null && GetPiece(toX, toY) == null && GetPiece(toX + 1, toY) == null)
+            {
+                if (SquareIsAttacked(b_kingX, b_kingY) == false && SquareIsAttacked(b_kingX - 1, b_kingY) == false && SquareIsAttacked(b_kingX - 2, b_kingY) == false)
+                    return true;
+            }
+            /// Check for ShortCastelBlack
+            if (GetPiece(7, 0) != null && GetPiece(7, 0)._type == Piece.PieceType.Rook && toX == 6 && toY == 0 && b_contKing == 0 && b_contRookR == 0 && GetPiece(toX - 1, toY) == null && GetPiece(toX, toY) == null)
+            {
+                if (SquareIsAttacked(b_kingX, b_kingY) == false && SquareIsAttacked(b_kingX + 1, b_kingY) == false && SquareIsAttacked(b_kingX + 2, b_kingY) == false)
+                    return true;
+            }
+            /// Check for LongCastelWhite
+            if (GetPiece(0, 7) != null && GetPiece(0, 7)._type == Piece.PieceType.Rook && toX == 2 && toY == 7 && w_contKing == 0 && w_contRookL == 0 && GetPiece(toX - 1, toY) == null && GetPiece(toX, toY) == null && GetPiece(toX + 1, toY) == null)
+            {
+                if (SquareIsAttacked(w_kingX, w_kingY) == false && SquareIsAttacked(w_kingX - 1, w_kingY) == false && SquareIsAttacked(w_kingX - 2, w_kingY) == false)
+                    return true;
+            }
+            /// Check for ShortCastelWhite
+            if (GetPiece(7, 7) != null && GetPiece(7, 7)._type == Piece.PieceType.Rook && toX == 6 && toY == 7 && w_contKing == 0 && w_contRookR == 0 && GetPiece(toX - 1, toY) == null && GetPiece(toX, toY) == null)
+            {
+                if (SquareIsAttacked(w_kingX, w_kingY) == false && SquareIsAttacked(w_kingX + 1, w_kingY) == false && SquareIsAttacked(w_kingX + 2, w_kingY) == false)
+                    return true;
+            }
+
+            return false;
+
         }
 
         public bool CanDoEnPassant(int fromX, int fromY, int toX, int toY)
@@ -624,7 +591,7 @@ namespace Chess_v2
                 return false;
             if (Math.Abs(LastPieceMovedCoordinates[3] - LastPieceMovedCoordinates[1]) != 2) /// Check for double square move
                 return false;
-            if(PawnThatAttack._color == Piece.PieceColor.White)
+            if (PawnThatAttack._color == Piece.PieceColor.White)
             {
                 if (fromY == 3 && LastPieceMovedCoordinates[3] == 3 && toX == LastPieceMovedCoordinates[2] && toY == LastPieceMovedCoordinates[1] + 1)
                     return true;
@@ -639,27 +606,71 @@ namespace Chess_v2
 
         }
 
-       
+        private void DoEnPassant()
+        {
+            SetPiece(LastPieceMovedCoordinates[2], LastPieceMovedCoordinates[3], null);
+            SetPiece(x, y, PiecePicked);
+            SetPiece(oldX, oldY, null);
+            UpdateLastPieceMoved(PiecePicked, oldX, oldY, x, y);
+            ChangeTurn();
+            CurrentPiece = null;
+            PieceWasMoved = true;
+        }
+
+        private void DoCastle()
+        {
+            if (x < 4)
+            {
+                SetPiece(x, y, PiecePicked);
+                SetPiece(oldX, oldY, null);
+                SetPiece(x + 1, y, GetPiece(0, y));
+                SetPiece(0, y, null);
+
+            }
+            else
+            {
+                SetPiece(x, y, PiecePicked);
+                SetPiece(oldX, oldY, null);
+                SetPiece(x - 1, y, GetPiece(7, y));
+                SetPiece(7, y, null);
+
+            }
+            if (PiecePicked._color == Piece.PieceColor.Black)
+                b_contKing++;
+            else w_contKing++;
+            updateKingPosition(PiecePicked, x, y);
+            UpdateLastPieceMoved(PiecePicked, oldX, oldY, x, y);
+            ChangeTurn();
+            CurrentPiece = null;
+            PieceWasMoved = true;
+        }
+
+
         public void PickOrDropPiece(MouseEventArgs e, int tileWidth, int tileHeight)
         {
-          
+
             Point location = e.Location;
             x = location.X / tileWidth;
             y = location.Y / tileHeight;
 
-            if (GetPiece(x, y) != null && GetPiece(x, y) != GetPiece(oldX, oldY) && string.Equals(currentTurn.ToString(), GetPiece(x, y)._color.ToString(), StringComparison.OrdinalIgnoreCase))
+           
+
+            if (GetPiece(x, y) != null && GetPiece(x, y) != GetPiece(oldX, oldY) && GetPiece(x, y)._color != OppositeColor)
                 CurrentPiece = null;
 
             bool PickOrDrop = CurrentPiece == null;
 
             if (PickOrDrop)
             {
+
                 PiecePicked = GetPiece(x, y);
-                oldX = x;
-                oldY = y;
                 
-                if (PiecePicked != null && string.Equals(currentTurn.ToString(),PiecePicked._color.ToString(), StringComparison.OrdinalIgnoreCase))
+                if (PiecePicked != null && PiecePicked._color != OppositeColor)
+                {
                     CurrentPiece = PiecePicked;
+                    oldX = x;
+                    oldY = y;
+                }
                 else CurrentPiece = null;
                 
             }
@@ -669,56 +680,23 @@ namespace Chess_v2
                 SquareToDrop = GetPiece(x, y);
 
                 if (CanDoCastle(oldX, oldY, x, y))
-                {
-                    if (x < 4)
-                    {
-                        SetPiece(x, y, PiecePicked);
-                        SetPiece(oldX, oldY, null);
-                        SetPiece(x + 1, y, GetPiece(0, y));
-                        SetPiece(0, y, null);
-                        
-                    }
-                    else
-                    {
-                        SetPiece(x, y, PiecePicked);
-                        SetPiece(oldX, oldY, null);
-                        SetPiece(x - 1, y, GetPiece(7, y));
-                        SetPiece(7, y, null);
-
-                    }
-                    if (PiecePicked._color == Piece.PieceColor.Black)
-                        b_contKing++;
-                    else w_contKing++;
-                    updateKingPosition(PiecePicked, x, y);
-                    UpdateLastPieceMoved(PiecePicked, oldX, oldY, x, y);
-                    ChangeTurn();
-                    CurrentPiece = null;
-
-                }
+                    DoCastle();
                 else if (CanDoEnPassant(oldX, oldY, x, y))
-                {
-                    SetPiece(LastPieceMovedCoordinates[2], LastPieceMovedCoordinates[3], null);
-                    SetPiece(x, y, PiecePicked);
-                    SetPiece(oldX, oldY, null);
-                    UpdateLastPieceMoved(PiecePicked, oldX, oldY, x, y);
-                    ChangeTurn();
-                    CurrentPiece = null;
-                }
+                    DoEnPassant();
                 else
-                { 
-                    
-                    if (ValidMove(oldX, oldY, x, y))
+                {
+
+                    if (PieceCanMove(oldX, oldY, x, y) && LegalMove(oldX, oldY, x, y))
                     {
                         MakeMove(PiecePicked, SquareToDrop, oldX, oldY, x, y);
                         UpdateLastPieceMoved(PiecePicked, oldX, oldY, x, y);
                         CurrentPiece = null;
+                        PieceWasMoved = true;
                     }
                 }
-               
+
             }
 
         }
-        
-       
     }
 }
