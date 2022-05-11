@@ -16,8 +16,6 @@
             if (piece != null && _color == piece._color)
                 return true;
             return false;
-
-
         }
         public enum PieceType
         {
@@ -27,18 +25,13 @@
             Bishop,
             Knight,
             Pawn
-
         }
-
         public enum PieceColor
         {
             Black,
             White
         }
 
-
     }
-
-
 
 }

@@ -291,17 +291,17 @@ namespace Chess_v2
 
             SetPiece(fromX, fromY, null);
             SetPiece(toX, toY, p1);
-            updateKingPosition(p1, toX, toY);
+            UpdateKingPosition(p1, toX, toY);
             if (isInCheck() || (p2 != null && (p2.SameColor(p1) == true || p2._type == Piece.PieceType.King)))
             {
                 SetPiece(fromX, fromY, p1);
                 SetPiece(toX, toY, p2);
-                updateKingPosition(p1, fromX, fromY);
+                UpdateKingPosition(p1, fromX, fromY);
                 return false;
             }
             SetPiece(fromX, fromY, p1);
             SetPiece(toX, toY, p2);
-            updateKingPosition(p1, fromX, fromY);
+            UpdateKingPosition(p1, fromX, fromY);
             return true;
 
         }
@@ -437,7 +437,7 @@ namespace Chess_v2
 
             return false;
         }
-        private void updateKingPosition(Piece king, int x, int y)
+        private void UpdateKingPosition(Piece king, int x, int y)
         {
             if (king != null)
                 if (king._type == Piece.PieceType.King)
@@ -517,7 +517,7 @@ namespace Chess_v2
         {
             SetPiece(fromX, fromY, null);
             SetPiece(toX, toY, p1);
-            updateKingPosition(p1, toX, toY);
+            UpdateKingPosition(p1, toX, toY);
 
             if (fromX == 4 && fromY == 0)
                 b_contKing++;
@@ -638,7 +638,7 @@ namespace Chess_v2
             if (PiecePicked._color == Piece.PieceColor.Black)
                 b_contKing++;
             else w_contKing++;
-            updateKingPosition(PiecePicked, x, y);
+            UpdateKingPosition(PiecePicked, x, y);
             UpdateLastPieceMoved(PiecePicked, oldX, oldY, x, y);
             ChangeTurn();
             CurrentPiece = null;

@@ -271,7 +271,7 @@ namespace Chess_v2
                 game.board.PieceWasMoved = false;
             }
 
-          ///  SquareDrawingOnClick(e);
+            SquareDrawingOnClick(e);
 
             if (game.WhitePawnPromotion != -1)
             {
