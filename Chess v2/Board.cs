@@ -470,7 +470,6 @@ namespace Chess_v2
                     return true;
                 return false;
             }
-
         }
         private bool CanEscapeFromCheck()
         {
@@ -648,12 +647,9 @@ namespace Chess_v2
 
         public void PickOrDropPiece(MouseEventArgs e, int tileWidth, int tileHeight)
         {
-
             Point location = e.Location;
             x = location.X / tileWidth;
             y = location.Y / tileHeight;
-
-           
 
             if (GetPiece(x, y) != null && GetPiece(x, y) != GetPiece(oldX, oldY) && GetPiece(x, y)._color != OppositeColor)
                 CurrentPiece = null;
@@ -676,7 +672,6 @@ namespace Chess_v2
             }
             else
             {
-
                 SquareToDrop = GetPiece(x, y);
 
                 if (CanDoCastle(oldX, oldY, x, y))

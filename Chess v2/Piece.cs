@@ -2,7 +2,6 @@
 {
     public class Piece
     {
-
         public PieceColor _color;
         public PieceType _type;
 

@@ -213,6 +213,7 @@ namespace Chess_v2
 
         private void GameOver()
         {
+            pictureBox1.Image = game.DrawGame();
             if (game.board.CheckMate())
             {
                 if (game.board.currentTurn == Board.Player.black)
@@ -242,11 +243,15 @@ namespace Chess_v2
                 for (int y = 0; y < 8; y++)
                 {
                     
-                    if (game.board.CanDoCastle(game.board.oldX, game.board.oldY, x, y) || game.board.CanDoEnPassant(game.board.oldX, game.board.oldY, x, y) || (game.board.PieceCanMove(game.board.oldX, game.board.oldY, x, y) && game.board.LegalMove(game.board.oldX, game.board.oldY, x, y)))
+                    if (game.board.CanDoCastle(game.board.oldX, game.board.oldY, x, y) || 
+                        game.board.CanDoEnPassant(game.board.oldX, game.board.oldY, x, y) ||
+                        (game.board.PieceCanMove(game.board.oldX, game.board.oldY, x, y) 
+                        && game.board.LegalMove(game.board.oldX, game.board.oldY, x, y)))
                     {
                         Graphics g = Graphics.FromImage(pictureBox1.Image);
                         Brush brush = new SolidBrush(Color.FromArgb(80, Color.Yellow));
-                        g.FillRectangle(brush, x * game.board.TileWidth, y * game.board.TileHeight, game.board.TileWidth, game.board.TileHeight);
+                        g.FillRectangle(brush, x * game.board.TileWidth, y * game.board.TileHeight,
+                            game.board.TileWidth, game.board.TileHeight);
 
                     }
                 }
