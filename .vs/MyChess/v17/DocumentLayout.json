@@ -1,0 +1,163 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\my-chess\\my-chess-game\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{A9C3A3C6-2F19-4F75-9543-17C8BEDE976C}|Chess v2\\ChessGame.csproj|d:\\my-chess\\my-chess-game\\chess v2\\properties\\settings.settings||{6D2695F9-5365-4A78-89ED-F205C045BFE6}",
+      "RelativeMoniker": "D:0:0:{A9C3A3C6-2F19-4F75-9543-17C8BEDE976C}|Chess v2\\ChessGame.csproj|solutionrelative:chess v2\\properties\\settings.settings||{6D2695F9-5365-4A78-89ED-F205C045BFE6}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A9C3A3C6-2F19-4F75-9543-17C8BEDE976C}|Chess v2\\Chess.csproj|d:\\my-chess\\my-chess-game\\chess v2\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A9C3A3C6-2F19-4F75-9543-17C8BEDE976C}|Chess v2\\Chess.csproj|solutionrelative:chess v2\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A9C3A3C6-2F19-4F75-9543-17C8BEDE976C}|Chess v2\\Chess v2.csproj|D:\\my-chess\\my-chess-game\\chess v2\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A9C3A3C6-2F19-4F75-9543-17C8BEDE976C}|Chess v2\\Chess v2.csproj|solutionrelative:chess v2\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A9C3A3C6-2F19-4F75-9543-17C8BEDE976C}|Chess v2\\Chess v2.csproj|D:\\my-chess\\my-chess-game\\chess v2\\game.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A9C3A3C6-2F19-4F75-9543-17C8BEDE976C}|Chess v2\\Chess v2.csproj|solutionrelative:chess v2\\game.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A9C3A3C6-2F19-4F75-9543-17C8BEDE976C}|Chess v2\\Chess v2.csproj|D:\\my-chess\\my-chess-game\\chess v2\\board.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A9C3A3C6-2F19-4F75-9543-17C8BEDE976C}|Chess v2\\Chess v2.csproj|solutionrelative:chess v2\\board.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A9C3A3C6-2F19-4F75-9543-17C8BEDE976C}|Chess v2\\Chess v2.csproj|D:\\my-chess\\my-chess-game\\chess v2\\form1.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A9C3A3C6-2F19-4F75-9543-17C8BEDE976C}|Chess v2\\Chess v2.csproj|solutionrelative:chess v2\\form1.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A9C3A3C6-2F19-4F75-9543-17C8BEDE976C}|Chess v2\\Chess v2.csproj|D:\\my-chess\\my-chess-game\\chess v2\\form1.resx||{FF4D6ACA-9352-4A5F-821E-F4D6EBDCAB11}",
+      "RelativeMoniker": "D:0:0:{A9C3A3C6-2F19-4F75-9543-17C8BEDE976C}|Chess v2\\Chess v2.csproj|solutionrelative:chess v2\\form1.resx||{FF4D6ACA-9352-4A5F-821E-F4D6EBDCAB11}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A9C3A3C6-2F19-4F75-9543-17C8BEDE976C}|Chess v2\\Chess v2.csproj|D:\\my-chess\\my-chess-game\\chess v2\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{A9C3A3C6-2F19-4F75-9543-17C8BEDE976C}|Chess v2\\Chess v2.csproj|solutionrelative:chess v2\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A9C3A3C6-2F19-4F75-9543-17C8BEDE976C}|Chess v2\\Chess v2.csproj|D:\\my-chess\\my-chess-game\\chess v2\\piece.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A9C3A3C6-2F19-4F75-9543-17C8BEDE976C}|Chess v2\\Chess v2.csproj|solutionrelative:chess v2\\piece.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Settings.settings",
+              "DocumentMoniker": "D:\\my-chess\\my-chess-game\\Chess v2\\Properties\\Settings.settings",
+              "RelativeDocumentMoniker": "Chess v2\\Properties\\Settings.settings",
+              "ToolTip": "D:\\my-chess\\my-chess-game\\Chess v2\\Properties\\Settings.settings",
+              "RelativeToolTip": "Chess v2\\Properties\\Settings.settings",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002767|",
+              "WhenOpened": "2024-03-03T13:13:37.939Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Form1.cs",
+              "DocumentMoniker": "D:\\my-chess\\my-chess-game\\Chess v2\\Form1.cs",
+              "RelativeDocumentMoniker": "Chess v2\\Form1.cs",
+              "ToolTip": "D:\\my-chess\\my-chess-game\\Chess v2\\Form1.cs",
+              "RelativeToolTip": "Chess v2\\Form1.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAACEBAAAmAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-03-03T12:54:21.033Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Form1.resx",
+              "DocumentMoniker": "D:\\my-chess\\my-chess-game\\Chess v2\\Form1.resx",
+              "RelativeDocumentMoniker": "Chess v2\\Form1.resx",
+              "ToolTip": "D:\\my-chess\\my-chess-game\\Chess v2\\Form1.resx",
+              "RelativeToolTip": "Chess v2\\Form1.resx",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001005|",
+              "WhenOpened": "2024-03-03T12:50:48.259Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Form1.Designer.cs",
+              "DocumentMoniker": "D:\\my-chess\\my-chess-game\\Chess v2\\Form1.Designer.cs",
+              "RelativeDocumentMoniker": "Chess v2\\Form1.Designer.cs",
+              "ToolTip": "D:\\my-chess\\my-chess-game\\Chess v2\\Form1.Designer.cs",
+              "RelativeToolTip": "Chess v2\\Form1.Designer.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-03-03T12:50:45.684Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Game.cs",
+              "DocumentMoniker": "D:\\my-chess\\my-chess-game\\Chess v2\\Game.cs",
+              "RelativeDocumentMoniker": "Chess v2\\Game.cs",
+              "ToolTip": "D:\\my-chess\\my-chess-game\\Chess v2\\Game.cs",
+              "RelativeToolTip": "Chess v2\\Game.cs",
+              "ViewState": "AQIAADgAAAAAAAAAAAArwEwAAAAMAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-03-03T12:44:03.358Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Board.cs",
+              "DocumentMoniker": "D:\\my-chess\\my-chess-game\\Chess v2\\Board.cs",
+              "RelativeDocumentMoniker": "Chess v2\\Board.cs",
+              "ToolTip": "D:\\my-chess\\my-chess-game\\Chess v2\\Board.cs",
+              "RelativeToolTip": "Chess v2\\Board.cs",
+              "ViewState": "AQIAAIgCAAAAAAAAAAAAAAICAAAdAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-03-03T12:43:55.573Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Piece.cs",
+              "DocumentMoniker": "D:\\my-chess\\my-chess-game\\Chess v2\\Piece.cs",
+              "RelativeDocumentMoniker": "Chess v2\\Piece.cs",
+              "ToolTip": "D:\\my-chess\\my-chess-game\\Chess v2\\Piece.cs",
+              "RelativeToolTip": "Chess v2\\Piece.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-03-03T12:43:50.002Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "Form1.cs [Design]",
+              "DocumentMoniker": "D:\\my-chess\\my-chess-game\\Chess v2\\Form1.cs",
+              "RelativeDocumentMoniker": "Chess v2\\Form1.cs",
+              "ToolTip": "D:\\my-chess\\my-chess-game\\Chess v2\\Form1.cs [Design]",
+              "RelativeToolTip": "Chess v2\\Form1.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-03-03T12:40:04.067Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Program.cs",
+              "DocumentMoniker": "D:\\my-chess\\my-chess-game\\Chess v2\\Program.cs",
+              "RelativeDocumentMoniker": "Chess v2\\Program.cs",
+              "ToolTip": "D:\\my-chess\\my-chess-game\\Chess v2\\Program.cs",
+              "RelativeToolTip": "Chess v2\\Program.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAqwAcAAAAYAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-03-03T12:38:43.234Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
