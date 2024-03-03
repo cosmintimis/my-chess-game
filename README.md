@@ -15,26 +15,26 @@ Welcome to My Chess Game, a basic implementation of chess created in C# Forms. T
 
 ## Screenshots
 
-### Start Game
-![Start Game](./screenshots/start-game.JPG)
+### Start Screen
+![Start Screen](./screenshots/start-game.JPG)
 
-### Black Wins
-![Black Wins](./screenshots/black-win.JPG)
+### Victory Screen
+![Victory Screen](./screenshots/black-win.JPG)
 
 ### Restart Game
 ![Restart Game](./screenshots/restart-game.JPG)
 
-### Displaying Available Moves for a Selected Piece
-![All Possible Moves](./screenshots/all-possible-moves.JPG)
+### Available Moves Highlighted
+![Available Moves Highlighted](./screenshots/all-possible-moves.JPG)
 
-### Before Promoting
-![Before Promoting](./screenshots/before-promoting.JPG)
+### Before Pawn Promotion
+![Before Pawn Promotion](./screenshots/before-promoting.JPG)
 
-### Choose Piece to Promote
-![Choose Piece to Promote](./screenshots/choose-piece.JPG)
+### Promotion Selection
+![Promotion Selection](./screenshots/choose-piece.JPG)
 
-### After Promoting
-![After Promoting](./screenshots/after-promoting.JPG)
+### After Pawn Promotion
+![After Pawn Promotion](./screenshots/after-promoting.JPG)
 
 ### En Passant - 1
 ![En Passant - 1](./screenshots/en-passant1.JPG)
@@ -50,3 +50,10 @@ To run the Chess Game on your system, follow these steps:
 2. Open the solution file in Visual Studio or any compatible C# IDE.
 3. Build the solution to ensure all dependencies are resolved.
 4. Start the application from the IDE or by running the executable file.
+
+
+## License
+
+Copyright © 2024 Cosmin Timis
+
+Licensed under the MIT License. See [LICENSE](LICENSE) for details.
