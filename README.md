@@ -16,31 +16,32 @@ Welcome to My Chess Game, a basic implementation of chess created in C# Forms. T
 ## Screenshots
 
 ### Start Screen
-![Start Screen](./screenshots/start-game.JPG)
+<img src="./screenshots/start-game.JPG" alt="Start Screen" width="400" height="400">
 
 ### Victory Screen
-![Victory Screen](./screenshots/black-win.JPG)
+<img src="./screenshots/black-win.JPG" alt="Victory Screen" width="400" height="400">
 
-### Restart Game
-![Restart Game](./screenshots/restart-game.JPG)
+### Restart Option
+<img src="./screenshots/restart-game.JPG" alt="Restart Option" width="400" height="400">
 
 ### Available Moves Highlighted
-![Available Moves Highlighted](./screenshots/all-possible-moves.JPG)
+<img src="./screenshots/all-possible-moves.JPG" alt="Available Moves Highlighted" width="400" height="400">
 
 ### Before Pawn Promotion
-![Before Pawn Promotion](./screenshots/before-promoting.JPG)
+<img src="./screenshots/before-promoting.JPG" alt="Before Pawn Promotion" width="400" height="400">
 
 ### Promotion Selection
-![Promotion Selection](./screenshots/choose-piece.JPG)
+<img src="./screenshots/choose-piece.JPG" alt="Promotion Selection" width="400" height="400">
 
 ### After Pawn Promotion
-![After Pawn Promotion](./screenshots/after-promoting.JPG)
+<img src="./screenshots/after-promoting.JPG" alt="After Pawn Promotion" width="400" height="400">
 
 ### En Passant - 1
-![En Passant - 1](./screenshots/en-passant1.JPG)
+<img src="./screenshots/en-passant1.JPG" alt="En Passant Example 1" width="400" height="400">
 
 ### En Passant - 2
-![En Passant - 2](./screenshots/en-passant2.JPG)
+<img src="./screenshots/en-passant2.JPG" alt="En Passant Example 2" width="400" height="400">
+
 
 ## Getting Started
 
